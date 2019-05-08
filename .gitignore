@@ -1,0 +1,7 @@
+__pycache__/
+.vscode/
+.ipynb_checkpoints/
+output/*
+!output/.gitkeep
+*.code-workspace
+*.ipynb

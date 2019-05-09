@@ -5,8 +5,8 @@
         <hr>
         <p>
             {{ date }}<br/>
-            Totaal verstuurd: {{ sum_total }}
-            [Link naar toelichting](https://github.com/uu-csa/mailing_betaling/blob/master/README.md)
+            Totaal verstuurd: {{ sum_total }}<br/>
+            <a href="https://github.com/uu-csa/mailing_betaling/blob/master/README.md" target="_blank">Link naar toelichting</a>
         </p>
 
         <h3>Zeef</h3>
@@ -21,11 +21,11 @@
                     <td>{{ nbasis }}</td>
                 </tr>
                 <tr>
-                    <td>Verzoeken</td>
+                    <td>Verzoek</td>
                     <td>{{ nvti }}</td>
                 </tr>
                 <tr>
-                    <td>Studenten</td>
+                    <td>Mailing</td>
                     <td>{{ nstud }}</td>
                 </tr>
             </tbody>

@@ -9,13 +9,13 @@ from .read_param import PARAM
 
 # load tables
 frames = [
-    'b_sih',
-    'b_opl',
-    'b_stop',
-    'b_adr_nl',
-    'b_ooa_aan',
-    'b_fin_storno',
-    'b_fin_grp',
+    's_sih',
+    's_opl',
+    's_stop',
+    's_adr_nl',
+    's_ooa_aan',
+    's_fin_storno',
+    's_fin_grp',
 ]
 class DataSet:
     pass

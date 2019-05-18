@@ -1,0 +1,9 @@
+name: py32
+dependencies:
+  - python=3.7
+  - pandas=0.24.*
+  - pyodbc=4.0.*
+  - ipykernel
+  - xlrd
+  - openpyxl
+  - flask=1.0.*

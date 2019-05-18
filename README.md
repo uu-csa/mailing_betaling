@@ -1,9 +1,9 @@
 # Mailing Betaling
-*Script om de selecties te maken voor de betaalmails*
+**Applicatie voor de betaalmail selecties van CSa**
 - - -
-L.C. Vriend
+*L.C. Vriend*
 
-Dit [Python](https://www.python.org/) script selecteert en groepeert de studenten die een betaalmail moeten ontvangen tijdens de inschrijfcampagne. Hieronder staat een korte uitleg over de werking van het script.
+Deze [Python](https://www.python.org/) applicatie selecteert en groepeert de studenten die een betaalmail moeten ontvangen tijdens de inschrijfcampagne. Hieronder staat een korte uitleg over de werking van de tool.
 
 ## Brongegevens
 De brondata komt uit de OSIRIS query database. Deze wordt geraadpleegd mbv [osiris_query](https://github.com/uu-csa/osiris_query).
@@ -68,3 +68,28 @@ Daarnaast geeft het Dashboard weer of er issues zijn opgetreden bij bepaalde stu
 1. Studenten die bij de derde zeef aan meer dan één betaalmail zijn toegewezen.
 
 In deze gevallen wordt de student buiten de selecties gehouden en zal handmatig bepaald moeten worden wat er in dat geval moet gebeuren.
+
+- - -
+
+## Afhankelijkheden
+
+Dit script maakt gebruik van verschillende Python packages. Als deze afhankelijkheden niet in de Python omgeving geïnstalleerd zijn, werkt het script niet. Het gaat om de volgende afhankelijkheden:
+
+- python=3.7
+- pandas=0.24.*
+- pyodbc=4.0.*
+- ipykernel
+- xlrd
+- openpyxl
+- flask=1.0.*
+
+Deze zijn terug te vinden in [`environment.yml`](https://github.com/uu-csa/mailing_betaling/blob/master/environment.yml).
+
+## Installatie
+Deze afhankelijkheden moeten [vanwege de ODBC-driver](https://github.com/uu-csa/mailing_betaling#brongegevens) in een 32bit virtuele omgeving geïnstalleerd worden. Bij gebruik van de [Anaconda](https://www.anaconda.com/distribution/) distributie van Python, is de virtuele omgeving met de volgende commando's in de command prompt te installeren:
+
+> `set CONDA_FORCE_32BIT=1`  
+> `conda env create -f environment.yml`
+
+## Applicatie
+Ervanuitgaande dat de virtuele omgeving geïnstalleerd is volgens bovenstaande instructies, kun je de applicatie starten met `run_app.bat`.

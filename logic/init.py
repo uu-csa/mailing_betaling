@@ -5,7 +5,7 @@ import datetime as dt
 import pickle
 
 import pandas as pd
-import src.query as qry
+from src.query import run_query
 from src.querydef import QueryDef
 from .read_param import PARAM
 
@@ -21,28 +21,18 @@ def update_tables():
 
     # queries to run
     queries = [
-        'b_sih',
-        'b_opl',
-        'b_stop',
-        'b_adr_nl',
-        'b_ooa_aan',
-        'b_fin_storno',
-        'b_fin_grp',
+        's_sih',
+        's_opl',
+        's_stop',
+        's_adr_nl',
+        's_ooa_aan',
+        's_fin_storno',
+        's_fin_grp',
     ]
 
     # run queries
     for query in queries:
-        qd = QueryDef(f"betaalmail/{query}", parameters=parameters)
-        qry.query(
-            qd.outfile,
-            qd.sql,
-            cursor=cursor,
-            description = qd.description,
-            qtype=qd.qtype,
-            columns=qd.columns,
-            dtypes=qd.dtypes,
-            remove_duplicates=qd.remove_duplicates,
-            )
+        run_query(f"betaalmail/{query}", cursor=cursor, parameters=parameters)
 
     # stop timer and print runtime
     stop = timeit.default_timer()

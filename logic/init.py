@@ -16,7 +16,7 @@ import datetime as dt
 import pickle
 
 import pandas as pd
-from src.query import run_query
+from src.query import connect, run_query
 from src.querydef import QueryDef
 from .read_param import PARAM
 
@@ -28,7 +28,7 @@ today = dt.date.today()
 
 def update_tables():
     # connect to database
-    cursor = qry.connect()
+    cursor = connect()
 
     # queries to run
     queries = [
@@ -53,7 +53,7 @@ def update_tables():
     return None
 
 def get_sql(query):
-    qd = QueryDef(f"betaalmail/{query}", parameters=parameters)
+    qd = QueryDef.from_file(f"betaalmail/{query}", parameters=parameters)
     return qd.sql
 
 

@@ -20,6 +20,9 @@ hr {
     border: 0;
     background-color: black;
 }
+a {
+    color: black;
+}
 
 table {
     border-collapse: collapse;
@@ -54,9 +57,10 @@ tbody td {
 }
 
 .container {
-    /* margin: 16px 0; */
     padding: 16px;
     display: grid;
+    border-radius: 3px;
+    border-top-left-radius: 0px;
     background-color: white;
     grid-gap: 16px;
     grid-template-columns: minmax(240px, 360px) 1fr;
@@ -78,6 +82,7 @@ tbody td {
 .right {
     grid-area: r;
     width: 100%;
+    min-height: 50vh;
     display: grid;
     grid-auto-flow: column;
     grid-column-gap: 16px;

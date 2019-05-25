@@ -1,3 +1,9 @@
+"""
+select
+======
+This module queries DF with the BASIS, STATUS and MAILS queries respectively.
+"""
+
 import pandas as pd
 
 from .config import MAIN_PATH

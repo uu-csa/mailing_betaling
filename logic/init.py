@@ -1,3 +1,14 @@
+"""
+init
+====
+This module initializes the tool by:
+
+1. Loading `mail_historie.pkl` as `df_mail_historie`
+2. Preparing `df_mail_vorige`
+3. Updating updating `betaalmail` tables if today is not in `df_mail_historie`
+4. Loading the sql statement from `s_sih`
+"""
+
 import timeit
 start = timeit.default_timer()
 
@@ -73,4 +84,4 @@ if df_mail_vorige.empty:
     cols = ['studentnummer', 'mail', 'datum_vorig']
     df_mail_vorige = pd.DataFrame(columns=cols)
 
-SQL = get_sql('b_sih')
+SQL = get_sql('s_sih')

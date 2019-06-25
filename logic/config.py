@@ -1,3 +1,12 @@
+"""
+config
+======
+This module contains:
+
+- MAIN_PATH (location of tool)
+- `load_ini` (function to load ini with configparser)
+"""
+
 import configparser
 from pathlib import Path
 

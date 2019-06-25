@@ -1,3 +1,11 @@
+"""
+prep
+====
+This module creates DF as `DataFrame`.
+DF contains the all active enrolment requests.
+The selected features are used for selecting the mailing groups.
+"""
+
 import datetime as dt
 
 import numpy as np
@@ -27,13 +35,20 @@ for frame in frames:
 
 
 def set_aanvangsjaar(df):
-    # aanvangsjaar
+    """
+    Add `aanvangsjaar` from `dfs.opl` as column to `df` and fill empty values with current year.
+    """
+
     df = df.merge(dfs.opl, on=['sinh_id'], how='left')
     df['aanvangsjaar'].cat.add_categories(PARAM.jaar, inplace=True)
     df['aanvangsjaar'] = df['aanvangsjaar'].fillna(PARAM.jaar)
     return df
 
 def set_soort_vti(df):
+    """
+    Categorize enrollment requests and add categories to column `soort` in `df`.
+    """
+
     # soort inschrijving
     filt1 = df['aanvangsjaar'] == PARAM.jaar
     filt2 = df['examentype'] == 'MA'
@@ -52,11 +67,23 @@ def set_soort_vti(df):
     return df
 
 def set_nl_adres(df):
-    # nl adres
+    """
+    Add `nl_adres` as column to `df` and fill value if `studentnummer` is present in `dfs.adr_nl`.
+    """
+
     df['nl_adres'] = df['studentnummer'].isin(dfs.adr_nl['studentnummer'])
     return df
 
 def set_stoplicht(df):
+    """
+    Create `df_stop_kleur` and `df_stop_toel` through pivot from `dfs.stop` and merge tables with `df`.
+
+    table           | columns                  | rows
+    --------------- | ------------------------ | --------------------
+    `df_stop_kleur` | `stoplicht` colors       | enrollment requests
+    `df_stop_toel`  | `stoplicht` explanations | enrollment requests
+    """
+
     # stoplichtkleuren
     df_stop_kleur = dfs.stop.pivot(
         index='sinh_id',
@@ -87,6 +114,14 @@ def set_stoplicht(df):
     return df
 
 def set_fin(df):
+    """
+    Add:
+    - `fingroepen` (financial groups)
+    - `factuur` (invoices)
+    - `storno` (reversal information)
+    as columns to `df`.
+    """
+
     factuur = PARAM.factuur
 
     # fingroepen
@@ -108,6 +143,10 @@ def set_fin(df):
     return df
 
 def set_ooa(df):
+    """
+    Add information on online application processes to `df`.
+    """
+
     # aanmeldprocessen
     dfs.ooa_aan['statusbesluit'] = dfs.ooa_aan['besluit'].astype('str')
     dfs.ooa_aan['statusbesluit'] = dfs.ooa_aan['statusbesluit'].replace(

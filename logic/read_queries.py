@@ -1,3 +1,15 @@
+"""
+read_queries
+============
+This module reads `queries.ini` and stores the following variables as `string`:
+
+- BASIS: Main selection
+- STATUS: Selection based on enrolment requests
+- MAILS: Selection per student
+
+These are formatted to be used in the `query` method of a `DataFrame`.
+"""
+
 import configparser
 from collections import namedtuple
 from .config import load_ini

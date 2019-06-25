@@ -1,3 +1,10 @@
+"""
+read_param
+==========
+This module reads `parameters.ini` and stores the results as `namedtuple`
+in PARAM.
+"""
+
 import configparser
 from collections import namedtuple
 from .config import load_ini

@@ -9,13 +9,17 @@ This module initializes the tool by:
 4. Loading the sql statement from `s_sih`
 """
 
+# standard library
 import timeit
 start = timeit.default_timer()
 
 import datetime as dt
 import pickle
 
+# third party
 import pandas as pd
+
+# local
 from src.query import connect, run_query
 from src.querydef import QueryDef
 from .config import PARAM

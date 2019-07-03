@@ -4,11 +4,14 @@ select
 This module queries DF with the BASIS, STATUS and MAILS queries respectively.
 """
 
+# third party
 import pandas as pd
 
+# local
 from .config import MAIN_PATH, PARAM
+from .read_queries import BASIS, STATUS, MAILS, BUITEN_ZEEF
 from .init import today, df_mail_historie, df_mail_vorige
-from .prep import DF
+from .moedertabel import DF
 
 
 # parameters

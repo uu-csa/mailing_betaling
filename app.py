@@ -1,14 +1,17 @@
+# standard library
 import sys
 sys.path.insert(0, '../osiris_query')
 
 import threading
 import webbrowser
-
-import pandas as pd
-import logic.select as select
-
 from math import ceil
+
+# third party
+import pandas as pd
 from flask import Flask, render_template, send_from_directory, jsonify, request
+
+# local
+import logic.select as select
 from logic.config import MAIN_PATH
 from logic.init import SQL
 

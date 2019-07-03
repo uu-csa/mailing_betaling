@@ -6,9 +6,7 @@ This module queries DF with the BASIS, STATUS and MAILS queries respectively.
 
 import pandas as pd
 
-from .config import MAIN_PATH
-from .read_param import PARAM
-from .read_queries import BASIS, STATUS, MAILS
+from .config import MAIN_PATH, PARAM
 from .init import today, df_mail_historie, df_mail_vorige
 from .prep import DF
 

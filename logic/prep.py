@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 
 import src.query as qry
-from .read_param import PARAM
+from .config import PARAM
 
 
 # load tables

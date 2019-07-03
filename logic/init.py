@@ -18,7 +18,7 @@ import pickle
 import pandas as pd
 from src.query import connect, run_query
 from src.querydef import QueryDef
-from .read_param import PARAM
+from .config import PARAM
 
 
 #parameters

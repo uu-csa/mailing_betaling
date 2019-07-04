@@ -16,7 +16,7 @@ import pandas as pd
 
 # local
 from src.query import load_frame
-from .config import PARAM
+from logic.config import PARAM
 
 
 # load tables

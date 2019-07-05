@@ -36,11 +36,14 @@ De brongegevens worden mbv [pandas](https://pandas.pydata.org/) samengevoegd tot
 > De parameters die gebruikt worden om het moederbestand te genereren, zijn terug te vinden (en te bewerken) in [`parameters.ini`](https://github.com/uu-csa/mailing_betaling/blob/master/parameters.ini).
 
 ## Zeef
-De moedertabel wordt vervolgens door de zeef gehaald. Deze bestaat uit drie opeenvolgende selecties:
+De moedertabel wordt vervolgens door de zeef gehaald. Deze bestaat uit de volgende selecties:
 
 1. **De basisselectie** : in deze stap worden alle studenten verwijderd die geen mail dienen te ontvangen. Het gaat hier (1) om studenten die op een andere manier aan de collegegeldverplichting (zullen gaan) voldoen, en (2) om studenten die systeemtechnisch nog niet aan de betalingsverplichting kunnen voldoen (bv. geen geverifieerde indentiteit of het te betalen collegegeldbedrag is nog niet bepaald).
+1. **De betalingselectie** : in deze stap worden studenten bij wie de betaling nog open staat, gescheiden van studenten die de machtiging hebben afgegeven.
 1. **De selectie per soort inschrijving** : in deze stap worden de studenten verwijderd die binnen het inschrijfproces (nog) niet in een fase beland zijn waarin ze voor een betaalmail in aanmerking komen. Het gaat hier om studenten die nog niet geselecteerd/geplaatst/toegelaten zijn of studenten die nog niet aan de matchingsverplichting voldaan hebben.
-1. **De selectie per betaalmail** : op dit punt houden we alleen nog de studenten over die een betaalmail moeten ontvangen. In deze stap wordt bepaald wie welke betaal moet krijgen.
+1. **De selectie per betaalmail** : op dit punt houden we alleen nog de studenten over die een betaalmail moeten ontvangen. In deze stap wordt bepaald wie welke betaalmail moet krijgen. 
+    * De selectie wordt uitgevoerd op studenten die de betaling nog niet geregeld hebben.
+    * Daarnaast wordt de selectie (buiten zeef) uitgevoerd op studenten die de betaling wél geregeld hebben maar dat niet hadden mogen doen (bijv. omdat ze een blokkade hebben).
 
 > De criteria voor deze selecties zijn terug te vinden (en te bewerken) in [`queries.ini`](https://github.com/uu-csa/mailing_betaling/blob/master/queries.ini). De queries zijn opgesteld volgens [deze grammatica](https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#indexing-query).
 

@@ -1,6 +1,6 @@
 # standard library
 import sys
-sys.path.insert(0, '../osiris_query')
+sys.path.insert(0, '../../osiris_query')
 
 import threading
 import webbrowser
@@ -22,13 +22,17 @@ date = select.today
 sum_total = len(select.df_mail_historie)
 n_bron = len(select.DF)
 n_basis = len(select.df_basis)
+n_open = len(select.df_open)
+n_betaald = len(select.df_betaald)
 n_vti = len(select.df_mail_vti)
 n_stud = len(select.df_mail_stud)
 
 query_bron = SQL.split('\n')
 query_basis = select.BASIS.split('and')
+query_betaling = select.BETALING
 query_verzoek = select.STATUS
 query_mailing = select.MAILS
+query_buitenzeef = select.BUITEN_ZEEF
 
 df = select.df_view_mail_stud.drop('Totaal')
 df.index = [f'm_{idx}' for idx in df.index]
@@ -71,12 +75,16 @@ def index():
         sum_total=sum_total,
         nbron=n_bron,
         nbasis=n_basis,
+        nopen=n_open,
+        nbetaald=n_betaald,
         nvti=n_vti,
         nstud=n_stud,
         query_bron=query_bron,
         query_basis=query_basis,
+        query_betaling=query_betaling,
         query_verzoek=query_verzoek,
         query_mailing=query_mailing,
+        query_buitenzeef=query_buitenzeef,
         mail_names=mail_names,
         copypasta=copypasta,
         table_vti=table_vti,

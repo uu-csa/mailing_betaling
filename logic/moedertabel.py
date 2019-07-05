@@ -131,12 +131,13 @@ def set_fin(df):
     as columns to `df`.
     """
 
-    factuur = PARAM.factuur
+    factuur   = PARAM.factuur
+    niet_sepa = PARAM.niet_sepa
 
     # fingroepen
     df['fingroep'] = df['studentnummer'].isin(
         dfs.fin_grp
-        .query("groep != @factuur")
+        .query("groep != @factuur and groep != @niet_sepa")
         ['studentnummer']
         )
 
@@ -144,6 +145,13 @@ def set_fin(df):
     df['factuur'] = df['studentnummer'].isin(
         dfs.fin_grp
         .query("groep == @factuur")
+        ['studentnummer']
+        )
+
+    # elders
+    df['niet_sepa'] = df['studentnummer'].isin(
+        dfs.fin_grp
+        .query("groep == @niet_sepa")
         ['studentnummer']
         )
 

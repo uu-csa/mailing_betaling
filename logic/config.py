@@ -34,6 +34,7 @@ Parameters = namedtuple('Parameters', param_names)
 values = list()
 values.append(int(ini['parameters']['jaar']))
 values.append(ini['parameters']['factuur'])
+values.append(ini['parameters']['niet_sepa'])
 
 for parameter in ini['opleiding']:
     lst = get_list(ini['opleiding'][parameter])

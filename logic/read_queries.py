@@ -3,9 +3,11 @@ read_queries
 ============
 This module reads `queries.ini` and stores the following variables as `string`:
 
-- BASIS: Main selection
-- STATUS: Selection based on enrolment requests
-- MAILS: Selection per student
+- BASIS:        Main selection
+- BETALING:     Selection on digital authorization
+- STATUS:       Selection based on enrolment requests
+- MAILS:        Selection per student
+- BUITEN_ZEEF:  Selection for exceptions
 
 These are formatted to be used in the `query` method of a `DataFrame`.
 """
@@ -23,7 +25,9 @@ ini = load_ini('queries.ini')
 
 # set queries
 BASIS = get_string(ini['basis']['basis'])
-BETAALD = {query:get_string(ini['betaald'][query]) for query in ini['betaald']}
+BETALING = {
+    query:get_string(ini['betaling'][query]) for query in ini['betaling']
+    }
 STATUS = {query:get_string(ini['status'][query]) for query in ini['status']}
 MAILS = {query:get_string(ini['mails'][query]) for query in ini['mails']}
 BUITEN_ZEEF = {

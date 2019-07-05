@@ -9,7 +9,7 @@ import pandas as pd
 
 # local
 from logic.config import MAIN_PATH, PARAM
-from logic.read_queries import BASIS, BETAALD, STATUS, MAILS, BUITEN_ZEEF
+from logic.read_queries import BASIS, BETALING, STATUS, MAILS, BUITEN_ZEEF
 from logic.init import today, df_mail_historie, df_mail_vorige
 from logic.moedertabel import DF
 
@@ -22,7 +22,7 @@ besluit_ok = ['S', 'T']
 df_basis = DF.query(BASIS, engine='python')
 
 # zeef
-df_open = df_basis.query(BETAALD['open'], engine='python')
+df_open = df_basis.query(BETALING['open'], engine='python')
 status = ' or '.join([f'({STATUS[query]})' for query in STATUS])
 df_mail_vti = df_open.query(status, engine='python').copy()
 
@@ -43,7 +43,7 @@ df_mail_stud = (
 
 
 # buiten zeef
-df_betaald = df_basis.query(BETAALD['betaald'], engine='python')
+df_betaald = df_basis.query(BETALING['betaald'], engine='python')
 df_betaald_vti = pd.DataFrame(columns=df_betaald.columns)
 for query in BUITEN_ZEEF:
     selection = df_betaald.query(BUITEN_ZEEF[query], engine='python')

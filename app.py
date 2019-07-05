@@ -22,8 +22,6 @@ date = select.today
 sum_total = len(select.df_mail_historie)
 n_bron = len(select.DF)
 n_basis = len(select.df_basis)
-n_open = len(select.df_open)
-n_betaald = len(select.df_betaald)
 n_vti = len(select.df_mail_vti)
 n_stud = len(select.df_mail_stud)
 
@@ -75,8 +73,6 @@ def index():
         sum_total=sum_total,
         nbron=n_bron,
         nbasis=n_basis,
-        nopen=n_open,
-        nbetaald=n_betaald,
         nvti=n_vti,
         nstud=n_stud,
         query_bron=query_bron,

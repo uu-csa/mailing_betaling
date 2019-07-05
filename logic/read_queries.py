@@ -23,6 +23,7 @@ ini = load_ini('queries.ini')
 
 # set queries
 BASIS = get_string(ini['basis']['basis'])
+BETAALD = {query:get_string(ini['betaald'][query]) for query in ini['betaald']}
 STATUS = {query:get_string(ini['status'][query]) for query in ini['status']}
 MAILS = {query:get_string(ini['mails'][query]) for query in ini['mails']}
 BUITEN_ZEEF = {

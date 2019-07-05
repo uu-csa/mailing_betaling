@@ -9,7 +9,7 @@ import pandas as pd
 
 # local
 from logic.config import MAIN_PATH, PARAM
-from logic.read_queries import BASIS, STATUS, MAILS, BUITEN_ZEEF
+from logic.read_queries import BASIS, BETAALD, STATUS, MAILS, BUITEN_ZEEF
 from logic.init import today, df_mail_historie, df_mail_vorige
 from logic.moedertabel import DF
 
@@ -18,11 +18,13 @@ from logic.moedertabel import DF
 geen_mail = PARAM.geen_mail
 besluit_ok = ['S', 'T']
 
+# basis
+df_basis = DF.query(BASIS, engine='python')
 
 # zeef
-df_basis = DF.query(BASIS, engine='python')
+df_open = df_basis.query(BETAALD['open'], engine='python')
 status = ' or '.join([f'({STATUS[query]})' for query in STATUS])
-df_mail_vti = df_basis.query(status, engine='python').copy()
+df_mail_vti = df_open.query(status, engine='python').copy()
 
 for query in MAILS:
     selection = df_mail_vti.query(
@@ -41,29 +43,30 @@ df_mail_stud = (
 
 
 # buiten zeef
-df_buiten_vti = pd.DataFrame(columns=DF.columns)
+df_betaald = df_basis.query(BETAALD['betaald'], engine='python')
+df_betaald_vti = pd.DataFrame(columns=df_betaald.columns)
 for query in BUITEN_ZEEF:
-    selection = DF.query(BUITEN_ZEEF[query], engine='python')
+    selection = df_betaald.query(BUITEN_ZEEF[query], engine='python')
     if not selection.empty:
-        df_buiten_vti = df_buiten_vti.append(selection)
-    df_buiten_vti[f'm_{query}'] = df_buiten_vti['studentnummer'].isin(selection['studentnummer'])
-df_buiten_vti = df_buiten_vti.query(status, engine='python')
+        df_betaald_vti = df_betaald_vti.append(selection)
+    df_betaald_vti[f'm_{query}'] = df_betaald_vti['studentnummer'].isin(selection['studentnummer'])
+df_betaald_vti = df_betaald_vti.query(status, engine='python')
 
 cols = ['studentnummer']
-cols_mailing = [col for col in df_buiten_vti.columns if col.startswith('m_')]
+cols_mailing = [col for col in df_betaald_vti.columns if col.startswith('m_')]
 cols.extend(cols_mailing)
 
-df_buiten_stud = (
-    df_buiten_vti[cols]
+df_betaald_stud = (
+    df_betaald_vti[cols]
     .groupby('studentnummer').sum()
     .applymap(bool)
     )
-df_buiten_stud
+df_betaald_stud
 
 
 # combine buiten zeef with zeef
-df_mail_vti = df_mail_vti.append(df_buiten_vti)
-df_mail_stud = df_mail_stud.append(df_buiten_stud, sort=False).fillna(False)
+df_mail_vti = df_mail_vti.append(df_betaald_vti, sort=False)
+df_mail_stud = df_mail_stud.append(df_betaald_stud, sort=False).fillna(False)
 cols_mailing = [col for col in df_mail_stud.columns if col.startswith('m_')]
 
 

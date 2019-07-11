@@ -9,16 +9,20 @@ This module initializes the tool by:
 4. Loading the sql statement from `s_sih`
 """
 
+# standard library
 import timeit
 start = timeit.default_timer()
 
 import datetime as dt
 import pickle
 
+# third party
 import pandas as pd
+
+# local
 from src.query import connect, run_query
 from src.querydef import QueryDef
-from .read_param import PARAM
+from .config import PARAM
 
 
 #parameters
@@ -52,6 +56,7 @@ def update_tables():
 
     return None
 
+
 def get_sql(query):
     qd = QueryDef.from_file(f"betaalmail/{query}", parameters=parameters)
     return qd.sql
@@ -83,5 +88,6 @@ except FileNotFoundError:
 if df_mail_vorige.empty:
     cols = ['studentnummer', 'mail', 'datum_vorig']
     df_mail_vorige = pd.DataFrame(columns=cols)
+
 
 SQL = get_sql('s_sih')

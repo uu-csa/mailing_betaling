@@ -1,18 +1,22 @@
 """
-prep
-====
+moedertabel
+===========
 This module creates DF as `DataFrame`.
 DF contains the all active enrolment requests.
 The selected features are used for selecting the mailing groups.
 """
 
+# standard library
 import datetime as dt
+from collections import namedtuple
 
+# third party
 import numpy as np
 import pandas as pd
 
-import src.query as qry
-from .read_param import PARAM
+# local
+from src.query import load_frame
+from logic.config import PARAM
 
 
 # load tables
@@ -24,14 +28,14 @@ frames = [
     's_ooa_aan',
     's_fin_storno',
     's_fin_grp',
-]
-class DataSet:
-    pass
-dfs = DataSet()
-for frame in frames:
-    setattr(
-        dfs, frame[2:], qry.load_frame(f"betaalmail/{frame}_var_{PARAM.jaar}")
-        )
+    ]
+
+
+DataSet = namedtuple('DataSet', [f[2:] for f in frames])
+dfs = DataSet(**{
+    f[2:]:load_frame(f"betaalmail/{f}_var_{PARAM.jaar}")
+    for f in frames
+    })
 
 
 def set_aanvangsjaar(df):
@@ -43,6 +47,7 @@ def set_aanvangsjaar(df):
     df['aanvangsjaar'].cat.add_categories(PARAM.jaar, inplace=True)
     df['aanvangsjaar'] = df['aanvangsjaar'].fillna(PARAM.jaar)
     return df
+
 
 def set_soort_vti(df):
     """
@@ -66,6 +71,7 @@ def set_soort_vti(df):
     df.loc[filt1 & df['soort'].isnull(), 'soort'] = 'matching'
     return df
 
+
 def set_nl_adres(df):
     """
     Add `nl_adres` as column to `df` and fill value if `studentnummer` is present in `dfs.adr_nl`.
@@ -74,9 +80,11 @@ def set_nl_adres(df):
     df['nl_adres'] = df['studentnummer'].isin(dfs.adr_nl['studentnummer'])
     return df
 
+
 def set_stoplicht(df):
     """
-    Create `df_stop_kleur` and `df_stop_toel` through pivot from `dfs.stop` and merge tables with `df`.
+    Create `df_stop_kleur` and `df_stop_toel` through pivot from `dfs.stop`.
+    Merge both tables with `df`.
 
     table           | columns                  | rows
     --------------- | ------------------------ | --------------------
@@ -113,6 +121,7 @@ def set_stoplicht(df):
     df = df.merge(df_stop_toel, on='sinh_id')
     return df
 
+
 def set_fin(df):
     """
     Add:
@@ -122,12 +131,13 @@ def set_fin(df):
     as columns to `df`.
     """
 
-    factuur = PARAM.factuur
+    factuur   = PARAM.factuur
+    niet_sepa = PARAM.niet_sepa
 
     # fingroepen
     df['fingroep'] = df['studentnummer'].isin(
         dfs.fin_grp
-        .query("groep != @factuur")
+        .query("groep != @factuur and groep != @niet_sepa")
         ['studentnummer']
         )
 
@@ -138,9 +148,17 @@ def set_fin(df):
         ['studentnummer']
         )
 
+    # elders
+    df['niet_sepa'] = df['studentnummer'].isin(
+        dfs.fin_grp
+        .query("groep == @niet_sepa")
+        ['studentnummer']
+        )
+
     # storno
     df = df.merge(dfs.fin_storno, on='studentnummer', how='left')
     return df
+
 
 def set_ooa(df):
     """

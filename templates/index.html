@@ -28,6 +28,7 @@
                     <td>Mailing</td>
                     <td>{{ nstud }}</td>
                 </tr>
+
             </tbody>
         </table>
 
@@ -36,8 +37,10 @@
             <div class="tab">
                 <button class="tablink" onclick="openQuery('bron', this)" id="defaultOpen">bron</button>
                 <button class="tablink" onclick="openQuery('basis', this)">basis</button>
+                <button class="tablink" onclick="openQuery('betaling', this)">betaling</button>
                 <button class="tablink" onclick="openQuery('verzoek', this)">verzoek</button>
                 <button class="tablink" onclick="openQuery('mailing', this)">mailing</button>
+                <button class="tablink" onclick="openQuery('buitenzeef', this)">blok</button>
             </div>
 
             <div id="bron" class="tabcontent">
@@ -53,6 +56,12 @@
                 {% endfor %}
                 </p>
             </div>
+            <div id="betaling" class="tabcontent">
+                {% for betaling in query_betaling %}
+                <p><b>{{ betaling }}</b></p>
+                <p>{{ query_betaling[betaling] }}</p>
+                {% endfor %}
+            </div>
             <div id="verzoek" class="tabcontent">
                 {% for verzoek in query_verzoek %}
                 <p><b>{{ verzoek }}</b></p>
@@ -63,6 +72,12 @@
                 {% for mail in query_mailing %}
                 <p><b>{{ mail }}</b></p>
                 <p>{{ query_mailing[mail] }}</p>
+                {% endfor %}
+            </div>
+            <div id="buitenzeef" class="tabcontent">
+                {% for query in query_buitenzeef %}
+                <p><b>{{ query }}</b></p>
+                <p>{{ query_buitenzeef[query] }}</p>
                 {% endfor %}
             </div>
 

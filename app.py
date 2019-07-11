@@ -1,14 +1,17 @@
+# standard library
 import sys
-sys.path.insert(0, '../osiris_query')
+sys.path.insert(0, '../../osiris_query')
 
 import threading
 import webbrowser
-
-import pandas as pd
-import logic.select as select
-
 from math import ceil
+
+# third party
+import pandas as pd
 from flask import Flask, render_template, send_from_directory, jsonify, request
+
+# local
+import logic.select as select
 from logic.config import MAIN_PATH
 from logic.init import SQL
 
@@ -24,8 +27,10 @@ n_stud = len(select.df_mail_stud)
 
 query_bron = SQL.split('\n')
 query_basis = select.BASIS.split('and')
+query_betaling = select.BETALING
 query_verzoek = select.STATUS
 query_mailing = select.MAILS
+query_buitenzeef = select.BUITEN_ZEEF
 
 df = select.df_view_mail_stud.drop('Totaal')
 df.index = [f'm_{idx}' for idx in df.index]
@@ -72,8 +77,10 @@ def index():
         nstud=n_stud,
         query_bron=query_bron,
         query_basis=query_basis,
+        query_betaling=query_betaling,
         query_verzoek=query_verzoek,
         query_mailing=query_mailing,
+        query_buitenzeef=query_buitenzeef,
         mail_names=mail_names,
         copypasta=copypasta,
         table_vti=table_vti,

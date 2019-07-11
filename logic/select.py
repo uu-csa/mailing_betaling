@@ -4,23 +4,27 @@ select
 This module queries DF with the BASIS, STATUS and MAILS queries respectively.
 """
 
+# third party
 import pandas as pd
 
-from .config import MAIN_PATH
-from .read_param import PARAM
-from .read_queries import BASIS, STATUS, MAILS
-from .init import today, df_mail_historie, df_mail_vorige
-from .prep import DF
+# local
+from logic.config import MAIN_PATH, PARAM
+from logic.read_queries import BASIS, BETALING, STATUS, MAILS, BUITEN_ZEEF
+from logic.init import today, df_mail_historie, df_mail_vorige
+from logic.moedertabel import DF
 
 
 # parameters
 geen_mail = PARAM.geen_mail
 besluit_ok = ['S', 'T']
 
-# zeef
+# basis
 df_basis = DF.query(BASIS, engine='python')
+
+# zeef
+df_open = df_basis.query(BETALING['open'], engine='python')
 status = ' or '.join([f'({STATUS[query]})' for query in STATUS])
-df_mail_vti = df_basis.query(status, engine='python').copy()
+df_mail_vti = df_open.query(status, engine='python').copy()
 
 for query in MAILS:
     selection = df_mail_vti.query(
@@ -37,6 +41,35 @@ df_mail_stud = (
     .applymap(bool)
     )
 
+
+# buiten zeef
+df_betaald = df_basis.query(BETALING['betaald'], engine='python')
+df_betaald_vti = pd.DataFrame(columns=df_betaald.columns)
+for query in BUITEN_ZEEF:
+    selection = df_betaald.query(BUITEN_ZEEF[query], engine='python')
+    if not selection.empty:
+        df_betaald_vti = df_betaald_vti.append(selection)
+    df_betaald_vti[f'm_{query}'] = df_betaald_vti['studentnummer'].isin(selection['studentnummer'])
+df_betaald_vti = df_betaald_vti.query(status, engine='python')
+
+cols = ['studentnummer']
+cols_mailing = [col for col in df_betaald_vti.columns if col.startswith('m_')]
+cols.extend(cols_mailing)
+
+df_betaald_stud = (
+    df_betaald_vti[cols]
+    .groupby('studentnummer').sum()
+    .applymap(bool)
+    )
+df_betaald_stud
+
+
+# combine buiten zeef with zeef
+df_mail_vti = df_mail_vti.append(df_betaald_vti, sort=False)
+df_mail_stud = df_mail_stud.append(df_betaald_stud, sort=False).fillna(False)
+cols_mailing = [col for col in df_mail_stud.columns if col.startswith('m_')]
+
+
 # checks
 geen_mail = df_mail_stud.sum(axis=1) == 0
 meer_mail = df_mail_stud.sum(axis=1) > 1
@@ -48,7 +81,7 @@ studenten_meer_mail = list(df_mail_stud.loc[meer_mail].index)
 df_mail_stud = df_mail_stud.loc[~geen_mail & ~meer_mail]
 df_mail_stud['mail'] = df_mail_stud.idxmax(axis=1)
 df_mail_stud['datum'] = today
-df_mail_stud = df_mail_stud.drop(cols_mailing, axis=1).reset_index()
+df_mail_stud = df_mail_stud[['mail', 'datum']].reset_index()
 df_mail_stud = df_mail_stud.merge(
     df_mail_vorige,
     on=['studentnummer', 'mail'],
@@ -63,6 +96,7 @@ df_mail_stud = (
     .query("delta > @delta", engine='python')
     .drop(['datum_vorig', 'delta'], axis=1)
     )
+
 
 # aggregates
 df_view_mail_vti = (
@@ -80,6 +114,7 @@ df_view_mail_stud.update(df_mail_agg)
 df_view_mail_stud.rename(mapper=lambda x: x[2:], axis=0, inplace=True)
 df_view_mail_stud = df_view_mail_stud.astype(int)
 df_view_mail_stud.loc['Totaal'] = df_view_mail_stud.sum()
+
 
 # update mailhistorie
 df_mail_historie = df_mail_historie.append(

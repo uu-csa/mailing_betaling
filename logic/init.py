@@ -56,6 +56,7 @@ def update_tables():
 
     return None
 
+
 def get_sql(query):
     qd = QueryDef.from_file(f"betaalmail/{query}", parameters=parameters)
     return qd.sql
@@ -87,5 +88,6 @@ except FileNotFoundError:
 if df_mail_vorige.empty:
     cols = ['studentnummer', 'mail', 'datum_vorig']
     df_mail_vorige = pd.DataFrame(columns=cols)
+
 
 SQL = get_sql('s_sih')

@@ -2,6 +2,12 @@ __pycache__/
 .vscode/
 .ipynb_checkpoints/
 output/*
+data/*
+venv/*
+dist/
+build/
+*.egg-info/
+
 !output/.gitkeep
 *.code-workspace
 *.ipynb

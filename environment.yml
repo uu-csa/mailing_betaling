@@ -1,9 +1,9 @@
-name: py32
+name: betaalmail
 dependencies:
   - python=3.7
-  - pandas=0.24.*
+  - pandas
+  - altair
   - pyodbc=4.0.*
-  - ipykernel
   - xlrd
   - openpyxl
-  - flask=1.0.*
+  - flask

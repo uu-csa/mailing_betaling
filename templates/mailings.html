@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+{% for name, quantity in mails.items() %}
+<div class="mailing">
+    <h4>{{ name[2:] }}</h4>
+    <div class="quantity">{{ quantity }}</div>
+    {% if quantity > 0 %}
+    <a href="/download?f={{ name }}">
+        <button id="{{ name }}" class="button">Excel</button>
+    </a>
+    <hr>
+    {% for batch, values in copypasta[name].items() %}
+    <div>
+        <button id="{{ name }}{{ batch }}" class="button" onclick="copyStringToClipboard('{{ values }}', '{{ name }}{{ batch }}')">Copy batch {{ batch + 1 }}</button>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p>Geen resultaten</p>
+    {% endif %}
+</div>
+{% endfor %}
+
+{% endblock %}

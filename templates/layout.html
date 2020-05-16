@@ -10,9 +10,85 @@
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
 <body>
-    <a href="javascript:shutDown()" class="shutdown">[x]</a>
-    <div class="container">
-    {% block body %}{% endblock %}
+    <div class="links">
+        <a href="javascript:shutDown()" class="shutdown monospace">[x]</a>
+        <div class="nav">
+        {% for tab in ['mailings', 'debug', 'queries', 'results'] %}
+            {% if tab == heading %}
+            <a href="/{{ tab }}" class="monospace selected">{{ tab }}</a>
+            {% else %}
+            <a href="/{{ tab }}" class="monospace">{{ tab }}</a>
+            {% endif %}
+        {% endfor %}
+        </div>
+    </div>
+    <div class="container flex">
+        <div class="flex column areas top-left-straight">
+            <h1>BETAALMAIL</h1>
+            <h2>{{ heading }}</h2>
+            <hr>
+            <p>
+                Datum: {{ sidebar.date }}<br/>
+                Totaal verstuurd: {{ sidebar.sum_total }}
+            </p>
+            <p>
+                <a href="https://github.com/uu-csa/mailing_betaling/blob/master/README.md" target="_blank">Link naar toelichting</a>
+            </p>
+
+            <h3>Zeef</h3>
+            <table border="1">
+                <tbody>
+                    <tr>
+                        <td>Bron</td>
+                        <td>{{ sidebar.n_bron }}</td>
+                    </tr>
+                    <tr>
+                        <td>Basis</td>
+                        <td>{{ sidebar.n_basis }}</td>
+                    </tr>
+                    <tr>
+                        <td>Verzoek</td>
+                        <td>{{ sidebar.n_vti }}</td>
+                    </tr>
+                    <tr>
+                        <td>Mailing</td>
+                        <td>{{ sidebar.n_stud }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Issues</h3>
+            {% if sidebar.geen_mail %}
+            <p>Geen mededeling gekoppeld:</p>
+            <div>
+                {% for studentnummer in sidebar.geen_mail %}
+                <form method="post" action="debug">
+                    <button type="submit" name="studentnummer" value="{{ studentnummer }}" class="button-small">
+                    {{ studentnummer }}
+                    </button>
+                </form>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% if sidebar.meer_mail %}
+            <p>Meerdere mededelingen gekoppeld:</p>
+            <div>
+            {% for studentnummer in sidebar.meer_mail %}
+                <form method="post" action="debug">
+                    <button type="submit" name="studentnummer" value="{{ studentnummer }}" class="button-small">
+                    {{ studentnummer }}
+                    </button>
+                </form>
+            {% endfor %}
+            </div>
+            {% endif %}
+            <a href="https://www.youtube.com/watch?v=q4Wu6Zw1fUc" class="icon">
+                <img src="{{ url_for('static', filename='noun_squid.svg') }}" width=48 alt="squid">
+            </a>
+        </div>
+        <div class="flex wide areas top-right-straight">
+        {% block body %}{% endblock %}
+        </div>
     </div>
 </body>
 </html>

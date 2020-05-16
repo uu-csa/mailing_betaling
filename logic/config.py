@@ -32,6 +32,7 @@ Parameters = namedtuple('Parameters', param_names)
 
 # set parameters
 values = list()
+values.append(ini['parameters']['data'])
 values.append(int(ini['parameters']['jaar']))
 values.append(ini['parameters']['factuur'])
 values.append(ini['parameters']['niet_sepa'])
@@ -45,3 +46,4 @@ for parameter in ini['aanmelding']:
     values.append(lst)
 
 PARAM = Parameters._make(values)
+DATA_PATH = MAIN_PATH / PARAM.data

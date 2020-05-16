@@ -10,7 +10,7 @@ import pandas as pd
 # local
 from logic.config import MAIN_PATH, PARAM
 from logic.read_queries import BASIS, BETALING, STATUS, MAILS, BUITEN_ZEEF
-from logic.init import today, df_mail_historie, df_mail_vorige
+from logic.init import today, MAIL_HISTORIE, MAIL_VORIGE
 from logic.moedertabel import DF
 
 
@@ -18,106 +18,106 @@ from logic.moedertabel import DF
 geen_mail = PARAM.geen_mail
 besluit_ok = ['S', 'T']
 
+
 # basis
-df_basis = DF.query(BASIS, engine='python')
+basis = DF.query(BASIS, engine='python')
+
 
 # zeef
-df_open = df_basis.query(BETALING['open'], engine='python')
-status = ' or '.join([f'({STATUS[query]})' for query in STATUS])
-df_mail_vti = df_open.query(status, engine='python').copy()
+status  = ' or '.join([f"({query})" for query in STATUS.values()])
 
-for query in MAILS:
-    selection = df_mail_vti.query(
-        MAILS[query],
-        engine='python')['studentnummer']
-    df_mail_vti[f'm_{query}'] = df_mail_vti['studentnummer'].isin(selection)
+mail_vti = (
+    basis
+    .query(BETALING['open'], engine='python')
+    .query(status, engine='python')
+)
 
-cols = ['studentnummer']
-cols_mailing = [col for col in df_mail_vti.columns if col.startswith('m_')]
-cols.extend(cols_mailing)
-df_mail_stud = (
-    df_mail_vti[cols]
-    .groupby('studentnummer').sum()
+for name, query in MAILS.items():
+    selection = mail_vti.query(query, engine='python').studentnummer
+    mail_vti[f'm_{name}'] = mail_vti.studentnummer.isin(selection)
+
+cols = [col for col in mail_vti.columns if col.startswith('m_')]
+mail_stud = (
+    mail_vti
+    .groupby('studentnummer')
+    [cols].sum()
     .applymap(bool)
-    )
+)
 
 
 # buiten zeef
-df_betaald = df_basis.query(BETALING['betaald'], engine='python')
-df_betaald_vti = pd.DataFrame(columns=df_betaald.columns)
-for query in BUITEN_ZEEF:
-    selection = df_betaald.query(BUITEN_ZEEF[query], engine='python')
+basis_betaald = basis.query(BETALING['betaald'], engine='python')
+mail_vti_bz = pd.DataFrame(columns=basis_betaald.columns)
+
+for name, query in BUITEN_ZEEF.items():
+    selection = basis_betaald.query(query, engine='python')
     if not selection.empty:
-        df_betaald_vti = df_betaald_vti.append(selection)
-    df_betaald_vti[f'm_{query}'] = df_betaald_vti['studentnummer'].isin(selection['studentnummer'])
-df_betaald_vti = df_betaald_vti.query(status, engine='python')
-
-cols = ['studentnummer']
-cols_mailing = [col for col in df_betaald_vti.columns if col.startswith('m_')]
-cols.extend(cols_mailing)
-
-df_betaald_stud = (
-    df_betaald_vti[cols]
-    .groupby('studentnummer').sum()
-    .applymap(bool)
+        mail_vti_bz = mail_vti_bz.append(selection, sort=False)
+    mail_vti_bz[f'm_{name}'] = (
+        mail_vti_bz.studentnummer.isin(selection.studentnummer)
     )
-df_betaald_stud
+
+cols = [col for col in mail_vti_bz.columns if col.startswith('m_')]
+mail_stud_bz = (
+    mail_vti_bz.query(status, engine='python')
+    .groupby('studentnummer')
+    [cols].sum()
+    .applymap(bool)
+)
 
 
 # combine buiten zeef with zeef
-df_mail_vti = df_mail_vti.append(df_betaald_vti, sort=False)
-df_mail_stud = df_mail_stud.append(df_betaald_stud, sort=False).fillna(False)
-cols_mailing = [col for col in df_mail_stud.columns if col.startswith('m_')]
+mail_vti = mail_vti.append(mail_vti_bz, sort=False)
+mail_stud = mail_stud.append(mail_stud_bz, sort=False).fillna(False)
+cols_mailing = [col for col in mail_stud.columns if col.startswith('m_')]
 
 
 # checks
-geen_mail = df_mail_stud.sum(axis=1) == 0
-meer_mail = df_mail_stud.sum(axis=1) > 1
+geen_mail = list(mail_stud.loc[mail_stud.sum(axis=1) == 0].index)
+meer_mail = list(mail_stud.loc[mail_stud.sum(axis=1) > 1].index)
 
-studenten_geen_mail = list(df_mail_stud.loc[geen_mail].index)
-studenten_meer_mail = list(df_mail_stud.loc[meer_mail].index)
 
 # set mail
-df_mail_stud = df_mail_stud.loc[~geen_mail & ~meer_mail]
-df_mail_stud['mail'] = df_mail_stud.idxmax(axis=1)
-df_mail_stud['datum'] = today
-df_mail_stud = df_mail_stud[['mail', 'datum']].reset_index()
-df_mail_stud = df_mail_stud.merge(
-    df_mail_vorige,
-    on=['studentnummer', 'mail'],
-    how='left'
-)
-df_mail_stud['delta'] = df_mail_stud['datum'] - df_mail_stud['datum_vorig']
-df_mail_stud['delta'].fillna(pd.Timedelta(days=999), inplace=True)
+mail_stud = mail_stud.loc[~mail_stud.index.isin(geen_mail + meer_mail)]
+mail_stud['mail'] = mail_stud.idxmax(axis=1)
+mail_stud['datum'] = today
+mail_stud = mail_stud[['mail', 'datum']]
 
+if MAIL_VORIGE.empty:
+    mail_stud['datum_vorig'] = pd.NA
+else:
+    mail_stud = mail_stud.merge(MAIL_VORIGE, on=['studentnummer', 'mail'], how='left')
+
+mail_stud['delta'] = mail_stud.datum - mail_stud.datum_vorig
+mail_stud.delta.fillna(pd.Timedelta(days=999), inplace=True)
 delta = pd.Timedelta(days=14)
-df_mail_stud = (
-    df_mail_stud
+
+mail_stud = (
+    mail_stud
     .query("delta > @delta", engine='python')
     .drop(['datum_vorig', 'delta'], axis=1)
-    )
+)
 
 
 # aggregates
-df_view_mail_vti = (
-    df_mail_vti.groupby('soort')[cols_mailing].sum().astype(int)
-    ).rename(mapper=lambda x: x[2:], axis=1)
-del df_view_mail_vti.index.name
+view_mail_vti = (
+    mail_vti.groupby('soort')[cols_mailing].sum().astype(int)
+).rename(mapper=lambda x: x[2:], axis=1)
 
-df_view_mail_stud = pd.DataFrame(index=cols_mailing, columns=['aantal'], data=0)
+view_mail_stud = pd.DataFrame(index=cols_mailing, columns=['aantal'], data=0)
 df_mail_agg = (
-    df_mail_stud
+    mail_stud
     .groupby('mail').count()
-    .rename(columns={'studentnummer': 'aantal'})
-    )
-df_view_mail_stud.update(df_mail_agg)
-df_view_mail_stud.rename(mapper=lambda x: x[2:], axis=0, inplace=True)
-df_view_mail_stud = df_view_mail_stud.astype(int)
-df_view_mail_stud.loc['Totaal'] = df_view_mail_stud.sum()
+    .rename(columns={'datum': 'aantal'})
+)
+view_mail_stud.update(df_mail_agg)
+view_mail_stud.rename(mapper=lambda x: x[2:], axis=0, inplace=True)
+view_mail_stud = view_mail_stud.astype(int)
+view_mail_stud.loc['Totaal'] = view_mail_stud.sum()
 
 
 # update mailhistorie
-df_mail_historie = df_mail_historie.append(
-    df_mail_stud, ignore_index=True, sort=False
-    )
-df_mail_historie.to_pickle('output/mail_historie.pkl')
+MAIL_HISTORIE = MAIL_HISTORIE.append(
+    mail_stud, sort=False
+)
+MAIL_HISTORIE.to_pickle('output/mail_historie.pkl')

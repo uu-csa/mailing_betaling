@@ -1,48 +1,82 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
-* {
+*,
+*::before,
+*::after {
+    margin: 0;
     box-sizing: border-box;
 }
 html {
     width: 100%;
-    height: 100vh;
+    /* height: 100%; */
+    /* height: 100vh; */
 }
 body {
-    background-color: #949494;
+    display: flex;
+    padding: 16px;
+    min-height: 100vh;
+    flex-direction: column;
+    background-color: #4c6856;
     font-family: 'Roboto', sans-serif;
 }
+    h1 {
+        margin: 0;
+    }
+    hr {
+        height: 1px;
+        margin: 0px;
+        border: 0;
+        background-color: #4c6856;
+    }
+    a {
+        color: black;
+    }
 
-h1 {
-    margin: 0;
-}
-hr {
-    height: 1px;
-    margin: 0px;
-    border: 0;
-    background-color: black;
-}
-a {
-    color: black;
-}
+    .button-small {
+        display: inline-block;
+        border-radius: 3px;
+        background-color: white;
+        border: 1px solid black;
+        padding: 2px 4px;
+        margin-bottom: 2px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 12px;
+        cursor: pointer;
+    }
+    .button-small:hover {
+        color: white;
+        background-color: #949494;
+    }
 
 table {
     border-collapse: collapse;
     font-size: 12px;
 }
-table * {
-    padding: 4px 8px;
-}
-thead {
-    background-color: black;
-    color: white;
-}
-thead th {
-    text-align: center;
-}
-tbody th {
-    text-align: left;
-}
-tbody td {
-    text-align: right;
+    table * {
+        padding: 4px 8px;
+    }
+    thead {
+        background-color: black;
+        color: white;
+    }
+    thead th {
+        text-align: left;
+    }
+    tbody tr {
+        border-bottom: 1px solid #4c6856;
+    }
+    tbody th {
+        text-align: left;
+    }
+    tbody td {
+        text-align: right;
+    }
+
+.monospace {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11px;
+    color: black;
+    text-decoration: none;
 }
 
 .shutdown {
@@ -50,42 +84,59 @@ tbody td {
     padding: 2px;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 11px;
-    color: black;
-    text-decoration: none;
 }
 
 .container {
-    padding: 16px;
-    display: grid;
-    border-radius: 3px;
-    border-top-left-radius: 0px;
-    background-color: white;
-    grid-gap: 16px;
-    grid-template-columns: minmax(240px, 360px) 1fr;
-    grid-template-rows: max-content 1fr;
-    grid-template-areas:
-        "l r"
-        "l b"
+    flex: 1;
+}
+
+.icon {
+    align-self: flex-start;
+    margin-top: auto;
+}
+
+.links {
+    display: flex;
+    justify-content: space-between;
+}
+    .nav a {
+        background-color: white;
+        padding: 2px 8px;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        border-bottom: 1px solid #4c6856;
+        background-color: #a0aca4;
     }
-.left {
-    grid-area: l;
+    .nav a:hover {
+        text-decoration: underline;
+    }
+    .nav .selected {
+        font-weight: bold;
+        background-color: white;
+        border-bottom: 1px solid white;
+    }
+
+.flex {
+    display: flex;
+    gap: 16px;
 }
-.bottom {
-    grid-area: b;
+.wide {
     width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    grid-column-gap: 16px;
 }
-.right {
-    grid-area: r;
-    width: 100%;
-    min-height: 50vh;
-    display: grid;
-    grid-auto-flow: column;
-    grid-column-gap: 16px;
+.areas {
+    background-color: white;
+    padding: 16px;
+    border-radius: 3px;
+}
+    .top-left-straight {
+        border-top-left-radius: 0;
+    }
+    .top-right-straight {
+        border-top-right-radius: 0;
+    }
+
+.column {
+    flex-direction: column;
 }
 
 .mailing {
@@ -95,29 +146,36 @@ tbody td {
     border: 1px solid black;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
-    flex-basis: 10%;
 }
-.mailing h4 {
-    width: 100%;
-    margin: 0px;
-    padding: 4px 8px;
-    background-color: black;
-    color: white;
-}
-.mailing p,
-.mailing a,
-.mailing div {
-    margin: 0px;
-    width: 90%;
-}
-.mailing p {
-    padding: 4px 0;
-    font-size: 12px;
-    font-style: italic;
-}
-.mailing hr {
-    width: 100%;
-}
+    .mailing h4 {
+        width: 100%;
+        margin: 0px;
+        padding: 4px 8px;
+        background-color: black;
+        color: white;
+    }
+    .mailing .quantity {
+        color: white;
+        width: 100%;
+        margin: 0px;
+        padding: 0px 8px;
+        background-color: #4c6856;
+        font-size: 8px;
+    }
+    .mailing p,
+    .mailing a,
+    .mailing div {
+        margin: 0px;
+        width: 90%;
+    }
+    .mailing p {
+        padding: 4px 0;
+        font-size: 12px;
+        font-style: italic;
+    }
+    .mailing hr {
+        width: 100%;
+    }
 
 .button {
     display: inline-block;
@@ -132,13 +190,13 @@ tbody td {
     font-size: 12px;
     cursor: pointer;
 }
-.button:first-child {
-    margin-top: 4px;
-}
-.button:hover {
-    color: white;
-    background-color: #949494;
-}
+    .button:first-child {
+        margin-top: 4px;
+    }
+    .button:hover {
+        color: white;
+        background-color: #949494;
+    }
 
 .string {
     display: none;
@@ -148,32 +206,30 @@ tbody td {
     border: 1px solid black;
     border-top-right-radius: 5px;
 }
-.tab {
-    display: flex;
-    background-color: black;
-    flex-direction: row;
-}
-.tablink {
-    background-color: black;
-    color: white;
-    border-top-right-radius: 5px;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 4px 8px;
-    font-size: 12px;
-    width: 25%;
-}
-.tablink:hover {
-    background-color: #949494;
-}
-.tabcontent {
-    display: none;
-    padding: 8px;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 12px;
-    background-color: white;
-}
-.tabcontent p {
-    margin: 0;
-}
+    .tab {
+        background-color: black;
+    }
+        .tablink {
+            background-color: black;
+            color: white;
+            border-top-right-radius: 5px;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 4px 8px;
+            font-size: 12px;
+            width: 25%;
+        }
+        .tablink:hover {
+            background-color: #949494;
+        }
+        .tabcontent {
+            display: none;
+            padding: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            background-color: white;
+        }
+        .tabcontent p {
+            margin: 0;
+        }

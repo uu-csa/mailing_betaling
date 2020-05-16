@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="flex column wide">
+    <h2>Resultaten op {{ sidebar.date }}</h2>
+    <div class="flex">
+        <div class="flex column">
+            <h3>Studenten</h3>
+            {{ table_stud|safe }}
+        </div>
+        <div class="flex column">
+            <h3>Inschrijfregels</h3>
+            {{ table_vti|safe }}
+        </div>
+    </div>
+    <hr>
+    <h2>Totalen per week</h2>
+    {{ table_totals|safe }}
+</div>
+{% endblock %}

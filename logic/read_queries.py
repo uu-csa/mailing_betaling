@@ -12,8 +12,6 @@ This module reads `queries.ini` and stores the following variables as `string`:
 These are formatted to be used in the `query` method of a `DataFrame`.
 """
 
-import configparser
-from collections import namedtuple
 from logic.config import load_ini
 
 

@@ -1,134 +1,104 @@
 {% extends 'layout.html' %}
 {% block body %}
-    <div class="left">
-        <h1>Betaalmail</h1>
-        <hr>
-        <p>
-            {{ date }}<br/>
-            Totaal verstuurd: {{ sum_total }}<br/>
-            <a href="https://github.com/uu-csa/mailing_betaling/blob/master/README.md" target="_blank">Link naar toelichting</a>
-        </p>
-
-        <h3>Zeef</h3>
-        <table border="1" class="dataframe">
-            <tbody>
-                <tr>
-                    <td>Bron</td>
-                    <td>{{ nbron }}</td>
-                </tr>
-                <tr>
-                    <td>Basis</td>
-                    <td>{{ nbasis }}</td>
-                </tr>
-                <tr>
-                    <td>Verzoek</td>
-                    <td>{{ nvti }}</td>
-                </tr>
-                <tr>
-                    <td>Mailing</td>
-                    <td>{{ nstud }}</td>
-                </tr>
-
-            </tbody>
-        </table>
-
-        <h3>Queries</h3>
-        <div class="queries">
-            <div class="tab">
-                <button class="tablink" onclick="openQuery('bron', this)" id="defaultOpen">bron</button>
-                <button class="tablink" onclick="openQuery('basis', this)">basis</button>
-                <button class="tablink" onclick="openQuery('betaling', this)">betaling</button>
-                <button class="tablink" onclick="openQuery('verzoek', this)">verzoek</button>
-                <button class="tablink" onclick="openQuery('mailing', this)">mailing</button>
-                <button class="tablink" onclick="openQuery('buitenzeef', this)">blok</button>
-            </div>
-
-            <div id="bron" class="tabcontent">
-                <p><b>sql</b></p>
-                {% for line in query_bron %}
-                    {{ line|replace('    ', '&emsp;')|safe }}<br/>
-                {% endfor %}
-            </div>
-            <div id="basis" class="tabcontent">
-                <p>
-                {% for line in query_basis %}
-                    {{ line }} and<br/>
-                {% endfor %}
-                </p>
-            </div>
-            <div id="betaling" class="tabcontent">
-                {% for betaling in query_betaling %}
-                <p><b>{{ betaling }}</b></p>
-                <p>{{ query_betaling[betaling] }}</p>
-                {% endfor %}
-            </div>
-            <div id="verzoek" class="tabcontent">
-                {% for verzoek in query_verzoek %}
-                <p><b>{{ verzoek }}</b></p>
-                <p>{{ query_verzoek[verzoek] }}</p>
-                {% endfor %}
-            </div>
-            <div id="mailing" class="tabcontent">
-                {% for mail in query_mailing %}
-                <p><b>{{ mail }}</b></p>
-                <p>{{ query_mailing[mail] }}</p>
-                {% endfor %}
-            </div>
-            <div id="buitenzeef" class="tabcontent">
-                {% for query in query_buitenzeef %}
-                <p><b>{{ query }}</b></p>
-                <p>{{ query_buitenzeef[query] }}</p>
-                {% endfor %}
-            </div>
-
-            <script>
-                // Get the element with id="defaultOpen" and click on it
-                document.getElementById('defaultOpen').click();
-            </script>
+<div class="left">
+    <h3>Queries</h3>
+    <div class="queries">
+        <div class="tab">
+            <button class="tablink" onclick="openQuery('bron', this)" id="defaultOpen">bron</button>
+            <button class="tablink" onclick="openQuery('basis', this)">basis</button>
+            <button class="tablink" onclick="openQuery('betaling', this)">betaling</button>
+            <button class="tablink" onclick="openQuery('verzoek', this)">verzoek</button>
+            <button class="tablink" onclick="openQuery('mailing', this)">mailing</button>
+            <button class="tablink" onclick="openQuery('buitenzeef', this)">blok</button>
         </div>
 
-        <h3>Issues</h3>
-        {% if geen_mail %}
-        <p>Geen mededeling gekoppeld:</p>
-        <ul>
-        {% for studentnummer in geen_mail %}
-            <li>{{ studentnummer }}</li>
-        {% endfor %}
-        </ul>
-        {% endif %}
-        {% if meer_mail %}
-        <p>Meerdere mededelingen gekoppeld:</p>
-        <ul>
-        {% for studentnummer in meer_mail %}
-            <li>{{ studentnummer }}</li>
-        {% endfor %}
-        </ul>
-        {% endif %}
-    </div>
-
-    <div class="right">
-        {% for name in mail_names %}
-        <div class="mailing">
-            <h4>{{ name[2:] }}</h4>
-            {% if mail_names[name] > 0 %}
-            <a href="/download?f={{ name }}">
-                <button id="{{ name }}" class="button">Excel</button>
-            </a>
-            <hr>
-            {% for batch in copypasta[name] %}
-            <div>
-                <button id="{{ name }}{{ batch }}" class="button" onclick="copyStringToClipboard('{{ copypasta[name][batch] }}', '{{ name }}{{ batch }}')">Copy batch {{ batch }}</button>
-            </div>
+        <div id="bron" class="tabcontent">
+            <p><b>sql</b></p>
+            {% for line in query_bron %}
+                {{ line|replace('    ', '&emsp;')|safe }}<br/>
             {% endfor %}
-            {% else %}
-            <p>Geen resultaten</p>
-            {% endif %}
         </div>
-        {% endfor %}
+        <div id="basis" class="tabcontent">
+            <p>
+            {% for line in query_basis %}
+                {{ line }} and<br/>
+            {% endfor %}
+            </p>
+        </div>
+        <div id="betaling" class="tabcontent">
+            {% for betaling in query_betaling %}
+            <p><b>{{ betaling }}</b></p>
+            <p>{{ query_betaling[betaling] }}</p>
+            {% endfor %}
+        </div>
+        <div id="verzoek" class="tabcontent">
+            {% for verzoek in query_verzoek %}
+            <p><b>{{ verzoek }}</b></p>
+            <p>{{ query_verzoek[verzoek] }}</p>
+            {% endfor %}
+        </div>
+        <div id="mailing" class="tabcontent">
+            {% for mail in query_mailing %}
+            <p><b>{{ mail }}</b></p>
+            <p>{{ query_mailing[mail] }}</p>
+            {% endfor %}
+        </div>
+        <div id="buitenzeef" class="tabcontent">
+            {% for query in query_buitenzeef %}
+            <p><b>{{ query }}</b></p>
+            <p>{{ query_buitenzeef[query] }}</p>
+            {% endfor %}
+        </div>
+
+        <script>
+            // Get the element with id="defaultOpen" and click on it
+            document.getElementById('defaultOpen').click();
+        </script>
     </div>
 
-    <div class="bottom">
-        {{ table_stud|safe }}
-        {{ table_vti|safe }}
+    <h3>Issues</h3>
+    {% if geen_mail %}
+    <p>Geen mededeling gekoppeld:</p>
+    <ul>
+    {% for studentnummer in geen_mail %}
+        <li>{{ studentnummer }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% if meer_mail %}
+    <p>Meerdere mededelingen gekoppeld:</p>
+    <ul>
+    {% for studentnummer in meer_mail %}
+        <li>{{ studentnummer }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+
+<div class="right">
+    {% for name in mail_names %}
+    <div class="mailing">
+        <h4>{{ name[2:] }}</h4>
+        {% if mail_names[name] > 0 %}
+        <a href="/download?f={{ name }}">
+            <button id="{{ name }}" class="button">Excel</button>
+        </a>
+        <hr>
+        {% for batch in copypasta[name] %}
+        <div>
+            <button id="{{ name }}{{ batch }}" class="button" onclick="copyStringToClipboard('{{ copypasta[name][batch] }}', '{{ name }}{{ batch }}')">Copy batch {{ batch }}</button>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>Geen resultaten</p>
+        {% endif %}
     </div>
+    {% endfor %}
+</div>
+
+<div class="bottom">
+    {{ table_stud|safe }}
+    {{ table_vti|safe }}
+</div>
+
 {% endblock %}

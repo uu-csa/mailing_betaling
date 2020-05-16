@@ -5,6 +5,22 @@
 
 Deze [Python](https://www.python.org/) applicatie selecteert en groepeert de studenten die een betaalmail moeten ontvangen tijdens de inschrijfcampagne. Hieronder staat een korte uitleg over de werking van de tool.
 
+## Mails
+Op dit moment worden de volgende mailing selecties uitgevoerd:
+
+naam            | omschrijving
+----------------|--------------
+dim             | digitale machtiging
+dim_om          | digitale machtiging/overmaken (SL-adres != NL)
+ma              | betaalgegevens bekend maar machtiging moet nog afgegeven worden (bijv. betaling door derde)
+om_csa          | studentgroep van studenten die collegegeld willen overmaken
+niet_sepa       | machtiging afgegeven bij een niet-SEPA bankrekening -> moet collegegeld overmaken (betaalvorm = 8)
+bet_elders      | student heeft aangegeven met bbc te betalen (betaalwijze = 'BETALING ELDERS.')
+bet_blok        | 3+ storno of naar incassobureau en vordering voldaan -> moet collegegeld overmaken
+bet_inc         | vordering open bij incassobureau -> moet vordering voldoen en collegegeld overmaken
+bet_ma_blok     | machtiging afgegeven maar 3+ storno of naar incassobureau en vordering voldaan -> moet collegegeld overmaken
+bet_ma_blok_inc | machtiging afgegeven maar vordering open bij incassobureau -> moet vordering voldoen en collegegeld overmaken
+
 ## Brongegevens
 De brondata komt uit de OSIRIS query database. Deze wordt geraadpleegd mbv [osiris_query](https://github.com/uu-csa/osiris_query).
 
@@ -59,7 +75,7 @@ De output wordt weergegeven in het Dashboard Betaalmail. Dit is een app gebouwd 
 
 > Op de achtergrond draait een lokale server die de webapplicatie aan de browser serveert. Om de applicatie af te sluiten moet niet alleen de browser/tab worden afgesloten maar ook de server.
 >
->De makkelijkste manier om dit te bewerkstelligen is via de knop `[x]` op het Dashboard. Deze sluit niet alleen de browser/tab af, maar ook de server.
+>De makkelijkste manier om dit te bewerkstelligen is via de knop `[x]` op het Dashboard. Hiermee sluit je de server af. Daarna kan je de tab sluiten.
 
 ### Output
 In het dashboard kun je per betaalmail een Excel-bestand downloaden met daarin alle studentnummers die de mail moeten ontvangen. Het is echter ook mogelijk om studenten per batch van 500 direct naar het klembord te kopiëren. Voor de kleinere selecties is het direct kopiëren naar OSIRIS doorgaans efficiënter dan het inlezen van Excel-bestanden.
@@ -72,6 +88,9 @@ Daarnaast geeft het Dashboard weer of er issues zijn opgetreden bij bepaalde stu
 
 In deze gevallen wordt de student buiten de selecties gehouden en zal handmatig bepaald moeten worden wat er in dat geval moet gebeuren.
 
+### Debugging
+Soms is het nodig om na te gaan waarom iemand wel/geen mail heeft ontvangen. In de tab 'debug' kun je een studentnummer opgeven. De tool toont vervolgens van de betreffende student (een groot gedeelte van) de informatie die het systeem gebruikt bij de verwerking. Dit biedt een handig aanknopingspunt bij het debuggen van de applicatie.
+
 - - -
 
 ## Afhankelijkheden
@@ -79,12 +98,11 @@ In deze gevallen wordt de student buiten de selecties gehouden en zal handmatig 
 Dit script maakt gebruik van verschillende Python packages. Als deze afhankelijkheden niet in de Python omgeving geïnstalleerd zijn, werkt het script niet. Het gaat om de volgende afhankelijkheden:
 
 - python=3.7
-- pandas=0.24.*
+- pandas
 - pyodbc=4.0.*
-- ipykernel
 - xlrd
 - openpyxl
-- flask=1.0.*
+- flask
 
 Deze zijn terug te vinden in [`environment.yml`](https://github.com/uu-csa/mailing_betaling/blob/master/environment.yml).
 

@@ -7,7 +7,6 @@ The selected features are used for selecting the mailing groups.
 """
 
 # standard library
-import datetime as dt
 from collections import namedtuple
 
 # third party
@@ -41,15 +40,22 @@ DataSet = namedtuple('DataSet', [f for f in frames])
 def sanity_check(path):
     if testfile.exists():
         print(f">>> file '{path.name}' found")
-        mdate = dt.datetime.fromtimestamp(testfile.stat().st_mtime).date()
     else:
         print(f">>> file '{path.name}' not found")
         return False
 
-    print(f">>> files last updated on {mdate}")
-    if mdate < today:
+    if testfile.suffix == '.pkl':
+        df = pd.read_pickle(testfile)
+    else:
+        df = pd.read_excel(testfile)
+
+    last_record = df.mutatie_datum.max()
+    print(f">>> last record was updated on {last_record}")
+
+    if last_record < today:
         print(f">>> files are stale (expecting: {today})")
         return False
+
     print(">>> sanity checked passed")
     return True
 
@@ -68,6 +74,7 @@ else:
             raise KeyboardInterrupt("cancelled by user")
         if user == 'i':
             break
+
     if user == 'i':
         dfs = DataSet(**{
             f:pd.read_pickle(DATA_PATH / f"{f}.pkl") for f in frames})

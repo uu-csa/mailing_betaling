@@ -13,7 +13,7 @@ from flask import Flask, render_template, send_from_directory, request
 
 # local
 import logic.select as select
-from logic.config import MAIN_PATH
+from logic.config import MAIN_PATH, PARAM
 from logic.init import SQL
 from logic.views import (
     create_stoplicht,
@@ -25,14 +25,15 @@ from logic.views import (
 # parameters
 ## sidebar
 items = dict(
-    date      = select.today,
-    sum_total = len(select.MAIL_HISTORIE),
-    n_bron    = len(select.DF),
-    n_basis   = len(select.basis),
-    n_vti     = len(select.mail_vti),
-    n_stud    = len(select.mail_stud),
-    geen_mail = select.geen_mail,
-    meer_mail = select.meer_mail,
+    date        = select.today,
+    last_update = select.DF.mutatie_datum.max(),
+    sum_total   = len(select.MAIL_HISTORIE),
+    n_bron      = len(select.DF),
+    n_basis     = len(select.basis),
+    n_vti       = len(select.mail_vti),
+    n_stud      = len(select.mail_stud),
+    geen_mail   = select.geen_mail,
+    meer_mail   = select.meer_mail,
 )
 SB = namedtuple('sidebar', items.keys())
 sidebar = SB(**items)
@@ -108,6 +109,7 @@ def view_queries():
         heading='queries',
         sidebar=sidebar,
         queries=queries,
+        params=PARAM._asdict(),
     )
 
 
@@ -167,6 +169,7 @@ def view_debug():
                     f"{create_stoplicht(select.DF, studentnummer)}"
                 f"</div>"
             f"</div>"
+            f"<hr>"
             f"<div class='flex wide'>"
                 f"<div class='flex column'>"
                     f"<h3>Mailhistorie</h3>"

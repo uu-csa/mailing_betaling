@@ -1,9 +1,19 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Major+Mono+Display&display=swap');
+
+:root {
+    --color-main: rgb(76, 104, 86);
+    --color-accent: rgb(160, 172, 164);
+    --color-box-shadow: rgba(0, 0, 0, 0.369);
+    --color-brand: rgb(230, 218, 218);
+    --color-tab: rgb(142, 142, 142);
+}
+
 *,
 *::before,
 *::after {
     margin: 0;
     box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
 }
 html {
     width: 100%;
@@ -13,40 +23,18 @@ body {
     padding: 16px;
     min-height: 100vh;
     flex-direction: column;
-    background-color: #4c6856;
-    font-family: 'Roboto', sans-serif;
+    background-color: var(--color-main);
 }
-    h1 {
-        margin: 0;
-    }
     hr {
         height: 1px;
-        margin: 0px;
         border: 0;
-        background-color: #4c6856;
+        background-color: var(--color-main);
     }
     a {
         color: black;
     }
     ul {
         padding: 0 16px;
-    }
-
-    .button-small {
-        display: inline-block;
-        border-radius: 3px;
-        background-color: white;
-        border: 1px solid black;
-        padding: 2px 4px;
-        margin-bottom: 2px;
-        text-align: center;
-        text-decoration: none;
-        font-size: 12px;
-        cursor: pointer;
-    }
-    .button-small:hover {
-        color: white;
-        background-color: #949494;
     }
 
 table {
@@ -56,69 +44,52 @@ table {
     table * {
         padding: 4px 8px;
     }
-    thead {
-        background-color: black;
-        color: white;
-    }
-    thead th {
-        text-align: left;
-    }
-    tbody tr {
-        border-bottom: 1px solid #4c6856;
-    }
-    tbody th {
-        text-align: left;
-    }
-    tbody td {
-        text-align: right;
-    }
+        thead {
+            background-color: black;
+            color: white;
+        }
+            thead th {
+                text-align: left;
+            }
+            tbody tr {
+                border-bottom: 1px solid var(--color-main);
+            }
+            tbody th {
+                text-align: left;
+            }
+            tbody td {
+                text-align: right;
+            }
 
-.monospace {
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 11px;
-    color: black;
-    text-decoration: none;
-}
 
-.shutdown {
-    background-color: white;
-    padding: 2px;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-}
-
-.container {
-    flex: 1;
-}
-
-.icon {
-    align-self: flex-start;
-    margin-top: auto;
-}
-
-.links {
-    display: flex;
-    justify-content: space-between;
-}
-    .nav a {
-        background-color: white;
-        padding: 2px 8px;
-        border-top-left-radius: 3px;
-        border-top-right-radius: 3px;
-        background-color: #a0aca4;
-    }
-    .nav a:hover {
-        text-decoration: underline;
-    }
-    .nav .selected {
-        font-weight: bold;
-        background-color: white;
-        border-bottom: 1px solid white;
-    }
-
+/* MODIFIERS */
 .flex {
     display: flex;
     gap: 16px;
+}
+.wrap {
+    flex-wrap: wrap;
+}
+.column {
+    flex-direction: column;
+}
+.wide {
+    width: 100%;
+}
+.long {
+    height: 100%;
+}
+.pad {
+    padding: 16px;
+}
+.indent {
+    margin-left: 16px;
+}
+.justify {
+    justify-content: center;
+}
+.align {
+    align-self: center;
 }
 .grid {
     display: grid;
@@ -131,19 +102,28 @@ table {
     padding: 2px;
     flex-direction: column;
     justify-content: center;
-    border-bottom: 1px solid #4c6856;
+    border-bottom: 1px solid var(--color-main);
+}
+.monospace {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11px;
+    color: black;
+    text-decoration: none;
+}
+.string {
+    display: none;
 }
 
-.wide {
-    width: 100%;
+
+/* SEGMENTS */
+.container {
+    flex: 1;
 }
-.long {
-    height: 100%;
-}
-.areas {
+.area {
+    z-index: 1;
     background-color: white;
-    padding: 16px;
     border-radius: 3px;
+    box-shadow: 3px 6px 7px var(--color-box-shadow);
 }
     .top-left-straight {
         border-top-left-radius: 0;
@@ -151,13 +131,99 @@ table {
     .top-right-straight {
         border-top-right-radius: 0;
     }
+.queries {
+    width: auto;
+    border: 1px solid black;
+    border-top-right-radius: 5px;
+}
+.sidebar p {
+    font-size: 12px;
+}
 
-.column {
-    flex-direction: column;
+
+/* ELEMENTS */
+.icon {
+    /* align-self: center; */
+    margin-top: auto;
+}
+.brand {
+    padding: 32px 4px 40px;
+    font-family: 'Major Mono Display', monospace;
+    font-size: 25px;
+    background-color: var(--color-brand);
+    color: var(--color-main);
+    border-top-right-radius: 3px;
+    border-bottom: solid 4px var(--color-tab);
+}
+.bottom {
+    border-top: solid 4px var(--color-tab);
+    padding-top: 24px;
+    background-color: var(--color-brand);
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.links {
+    display: flex;
+    justify-content: space-between;
+}
+    .links a {
+        position: relative;
+        top: 0;
+        background-color: white;
+        padding: 2px 8px;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        background-color: var(--color-accent);
+        box-shadow: 3px 6px 7px var(--color-box-shadow);
+        transition: top ease 0.2s;
+        padding-bottom: 5px;
+    }
+    .nav a:hover:not(.selected) {
+        top: -5px;
+    }
+    .nav .selected {
+        font-weight: bold;
+        background-color: white;
+        border-bottom: 1px solid white;
+    }
+    a.shutdown {
+        color: var(--color-main);
+        background-color: rgb(230, 218, 218);
+        padding: 2px;
+    }
+
+.button {
+    display: inline-block;
+    width: 100%;
+    border-radius: 3px;
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    padding: 4px 8px;
+    margin-bottom: 4px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all ease 0.2s;
+}
+    .button:first-child {
+        margin-top: 4px;
+    }
+    .button:hover {
+        color: white;
+        background-color: var(--color-accent);
+    }
+
+.button-small {
+    width: auto;
+    padding: 2px 8px;
+    margin-bottom: 2px;
 }
 
 .mailing {
     display: flex;
+    flex-grow: 1;
     flex-direction: column;
     align-items: center;
     border: 1px solid black;
@@ -176,7 +242,7 @@ table {
         width: 100%;
         margin: 0px;
         padding: 0px 8px;
-        background-color: #4c6856;
+        background-color: var(--color-main);
         font-size: 8px;
     }
     .mailing p,
@@ -194,59 +260,30 @@ table {
         width: 100%;
     }
 
-.button {
-    display: inline-block;
-    width: 100%;
-    border-radius: 3px;
-    background-color: white;
-    border: 1px solid black;
-    padding: 4px 8px;
-    margin-bottom: 4px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 12px;
-    cursor: pointer;
+.tab {
+    background-color: black;
 }
-    .button:first-child {
-        margin-top: 4px;
-    }
-    .button:hover {
-        color: white;
-        background-color: #949494;
-    }
-
-.string {
-    display: none;
-}
-
-.queries {
-    border: 1px solid black;
-    border-top-right-radius: 5px;
-}
-    .tab {
+    .tablink {
         background-color: black;
+        color: white;
+        border-top-right-radius: 5px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 4px 8px;
+        font-size: 12px;
+        width: 25%;
     }
-        .tablink {
-            background-color: black;
-            color: white;
-            border-top-right-radius: 5px;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            padding: 4px 8px;
-            font-size: 12px;
-            width: 25%;
-        }
-        .tablink:hover {
-            background-color: #949494;
-        }
-        .tabcontent {
-            display: none;
-            padding: 8px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 12px;
-            background-color: white;
-        }
-        .tabcontent p {
-            margin: 0;
-        }
+    .tablink:hover {
+        background-color: var(--color-accent);
+    }
+    .tabcontent {
+        display: none;
+        padding: 16px;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 12px;
+        background-color: white;
+    }
+    .tabcontent p {
+        margin: 0;
+    }

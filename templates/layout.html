@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>{{ title }}</title>
+    <title>{{ title }}{{ heading }}</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
@@ -23,74 +23,79 @@
         </div>
     </div>
     <div class="container flex">
-        <div class="flex column areas top-left-straight">
-            <h1>BETAALMAIL</h1>
-            <h2>{{ heading }}</h2>
-            <hr>
-            <p>
-                Datum: {{ sidebar.date }}<br/>
-                Totaal verstuurd: {{ sidebar.sum_total }}
-            </p>
-            <p>
-                <a href="https://github.com/uu-csa/mailing_betaling/blob/master/README.md" target="_blank">Link naar toelichting</a>
-            </p>
+        <div class="flex column area top-left-straight sidebar">
+            <h1 class="brand">b€tAAlm@il</h1>
+            <div class="flex column long pad">
+                <h2>{{ heading }}</h2>
+                <hr>
+                <p class="indent">
+                    Datum: {{ sidebar.date }}<br/>
+                    Totaal verstuurd: {{ sidebar.sum_total }}
+                </p>
+                <p class="indent">
+                    <a href="https://github.com/uu-csa/mailing_betaling/blob/master/README.md" target="_blank">Link naar toelichting</a>
+                </p>
 
-            <h3>Zeef</h3>
-            <p>
-                Laatste update:<br/>
-                <span class="monospace">{{ sidebar.last_update }}</span>
-            </p>
-            <table border="1">
-                <tbody>
-                    <tr>
-                        <td>Bron</td>
-                        <td>{{ sidebar.n_bron }}</td>
-                    </tr>
-                    <tr>
-                        <td>Basis</td>
-                        <td>{{ sidebar.n_basis }}</td>
-                    </tr>
-                    <tr>
-                        <td>Verzoek</td>
-                        <td>{{ sidebar.n_vti }}</td>
-                    </tr>
-                    <tr>
-                        <td>Mailing</td>
-                        <td>{{ sidebar.n_stud }}</td>
-                    </tr>
-                </tbody>
-            </table>
+                <h3>Zeef</h3>
+                <p class="indent">
+                    Laatste update:<br/>
+                    <span class="monospace">{{ sidebar.last_update }}</span>
+                </p>
+                <table class="indent" border="1">
+                    <tbody>
+                        <tr>
+                            <td>Bron</td>
+                            <td>{{ sidebar.n_bron }}</td>
+                        </tr>
+                        <tr>
+                            <td>Basis</td>
+                            <td>{{ sidebar.n_basis }}</td>
+                        </tr>
+                        <tr>
+                            <td>Verzoek</td>
+                            <td>{{ sidebar.n_vti }}</td>
+                        </tr>
+                        <tr>
+                            <td>Mailing</td>
+                            <td>{{ sidebar.n_stud }}</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-            <h3>Issues</h3>
-            {% if sidebar.geen_mail %}
-            <p>Geen mededeling gekoppeld:</p>
-            <div>
-                {% for studentnummer in sidebar.geen_mail %}
-                <form method="post" action="debug">
-                    <button type="submit" name="studentnummer" value="{{ studentnummer }}" class="button-small">
-                    {{ studentnummer }}
-                    </button>
-                </form>
+                <h3>Issues</h3>
+                {% if sidebar.geen_mail %}
+                <p class="indent">Geen mededeling gekoppeld:</p>
+                <div class="indent">
+                    {% for studentnummer in sidebar.geen_mail %}
+                    <form method="post" action="debug">
+                        <button type="submit" name="studentnummer" value="{{ studentnummer }}" class="button button-small">
+                        {{ studentnummer }}
+                        </button>
+                    </form>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% if sidebar.meer_mail %}
+                <p>Meerdere mededelingen gekoppeld:</p>
+                <div class="indent">
+                {% for studentnummer in sidebar.meer_mail %}
+                    <form method="post" action="debug">
+                        <button type="submit" name="studentnummer" value="{{ studentnummer }}" class="button button-small">
+                        {{ studentnummer }}
+                        </button>
+                    </form>
                 {% endfor %}
+                </div>
+                {% endif %}
             </div>
-            {% endif %}
-            {% if sidebar.meer_mail %}
-            <p>Meerdere mededelingen gekoppeld:</p>
-            <div>
-            {% for studentnummer in sidebar.meer_mail %}
-                <form method="post" action="debug">
-                    <button type="submit" name="studentnummer" value="{{ studentnummer }}" class="button-small">
-                    {{ studentnummer }}
-                    </button>
-                </form>
-            {% endfor %}
+            <div class="bottom flex justify">
+                <a href="https://www.youtube.com/watch?v=q4Wu6Zw1fUc" class="icon">
+                    <img src="{{ url_for('static', filename='noun_squid.svg') }}" width=48 alt="squid">
+                </a>
             </div>
-            {% endif %}
-            <a href="https://www.youtube.com/watch?v=q4Wu6Zw1fUc" class="icon">
-                <img src="{{ url_for('static', filename='noun_squid.svg') }}" width=48 alt="squid">
-            </a>
         </div>
-        <div class="flex wide areas top-right-straight">
+
+        <div class="flex wide area top-right-straight pad">
         {% block body %}{% endblock %}
         </div>
     </div>

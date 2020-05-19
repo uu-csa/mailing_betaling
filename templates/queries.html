@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% block body %}
+
 <div class="flex column">
     <h3>Parameters</h3>
 
@@ -23,8 +24,7 @@
 
 <div class="flex column wide">
     <h3>Queries</h3>
-    <div class="queries wide long">
-
+    <div class="queries long">
         <div class="flex tab">
             <button class="tablink" onclick="openQuery('bron', this)" id="defaultOpen">bron</button>
             <button class="tablink" onclick="openQuery('basis', this)">basis</button>
@@ -50,28 +50,28 @@
         <div id="betaling" class="tabcontent">
             {% for key, value in queries.betaling.items() %}
             <p><b>{{ key }}</b></p>
-            <p>{{ value|replace('and', 'and<br/>')|safe }}</p>
+            <p>{{ value|replace(' and', ' and<br/>')|safe }}</p>
             </br>
             {% endfor %}
         </div>
         <div id="verzoek" class="tabcontent">
             {% for key, value in queries.verzoek.items() %}
             <p><b>{{ key }}</b></p>
-            <p>{{ value|replace('and', 'and<br/>')|safe }}</p>
+            <p>{{ value|replace(' and', ' and<br/>')|safe }}</p>
             </br>
             {% endfor %}
         </div>
         <div id="mailing" class="tabcontent">
             {% for key, value in queries.mailing.items() %}
             <p><b>{{ key }}</b></p>
-            <p>{{ value|replace('and', 'and<br/>')|safe }}</p>
+            <p>{{ value|replace(' and', ' and<br/>')|safe }}</p>
             </br>
             {% endfor %}
         </div>
         <div id="buitenzeef" class="tabcontent">
             {% for key, value in queries.buitenzeef.items() %}
             <p><b>{{ key }}</b></p>
-            <p>{{ value|replace('and', 'and<br/>')|safe }}</p>
+            <p>{{ value|replace(' and', ' and<br/>')|safe }}</p>
             </br>
             {% endfor %}
         </div>
@@ -82,4 +82,5 @@
         </script>
     </div>
 </div>
+
 {% endblock %}

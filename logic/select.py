@@ -8,7 +8,7 @@ This module queries DF with the BASIS, STATUS and MAILS queries respectively.
 import pandas as pd
 
 # local
-from logic.config import MAIN_PATH, PARAM
+from logic.config import DATA_PATH, PARAM
 from logic.read_queries import BASIS, BETALING, STATUS, MAILS, BUITEN_ZEEF
 from logic.init import today, MAIL_HISTORIE, MAIL_VORIGE
 from logic.moedertabel import DF
@@ -120,4 +120,4 @@ view_mail_stud.loc['Totaal'] = view_mail_stud.sum()
 MAIL_HISTORIE = MAIL_HISTORIE.append(
     mail_stud, sort=False
 )
-MAIL_HISTORIE.to_pickle('output/mail_historie.pkl')
+MAIL_HISTORIE.to_pickle(DATA_PATH / 'mail_historie.pkl')

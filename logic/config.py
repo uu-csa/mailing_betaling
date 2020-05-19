@@ -46,4 +46,7 @@ for parameter in ini['aanmelding']:
     values.append(lst)
 
 PARAM = Parameters._make(values)
-DATA_PATH = MAIN_PATH / PARAM.data
+if PARAM.data.startswith('.'):
+    DATA_PATH = MAIN_PATH / PARAM.data
+else:
+    DATA_PATH = Path(PARAM.data)

@@ -76,7 +76,7 @@ today = dt.date.today()
 
 # load history
 try:
-    file = MAIN_PATH / 'output/mail_historie.pkl'
+    file = DATA_PATH / 'mail_historie.pkl'
     MAIL_HISTORIE = pd.read_pickle(file)
 
     # update tables or exclude today
@@ -101,5 +101,5 @@ except FileNotFoundError:
 
 
 # SQL = get_sql('inschrijfhistorie')
-with open(DATA_PATH / 'sql.txt', 'r') as f:
+with open(MAIN_PATH / 'sql.txt', 'r') as f:
     SQL = f.read()

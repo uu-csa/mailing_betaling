@@ -79,7 +79,7 @@ for mail in mails:
 
 # configure app
 app = Flask(__name__)
-title = 'Dashboard | BETAALMAIL'
+title = 'betaalmail | '
 
 def shutdown_server():
     func = request.environ.get('werkzeug.server.shutdown')
@@ -222,4 +222,4 @@ def shutdown():
 if __name__ == '__main__':
     url = 'http://localhost:5555'
     threading.Timer(3, lambda: webbrowser.open(url, new=2)).start()
-    app.run(debug=True, port=5555)
+    app.run(debug=False, port=5555)

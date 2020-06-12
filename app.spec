@@ -6,9 +6,7 @@ added_files =[
     ('templates/*.*', 'templates'),
     ('static/*.*', 'static'),
     ('output/*.*', 'output'),
-    ('sql.txt', '.'),
-    ('parameters.ini', '.'),
-    ('queries.ini', '.'),
+    ('config.ini', '.'),
     ('venv/Lib/site-packages/pandas/io/formats/templates/html.tpl', '.'),
 ]
 

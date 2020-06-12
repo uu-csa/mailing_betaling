@@ -62,6 +62,15 @@ if pathstring_data.startswith('.'):
 else:
     DATA_PATH = Path(pathstring_data)
 
+if not DATA_PATH.exists():
+    raise FileNotFoundError(
+        "\n\nCannot access the data folder!\n\n"
+        "Please check the following:\n"
+        f"-> Is the data path '{pathstring_data}' correct?\n"
+        "... If not change your settings in `config.ini`...\n"
+        "-> Are you connected to the vpn?"
+    )
+
 MAILHIST_PATH = DATA_PATH / cfg['config']['mailhistorie']
 
 

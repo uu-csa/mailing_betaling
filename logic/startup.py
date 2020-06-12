@@ -7,12 +7,14 @@ This module initializes the tool by:
 2. Preparing `mail_vorige`
 3. Updating updating `betaalmail` tables if today is not in `mail_historie`
 4. Loading the sql statement from `s_sih`
+5. Loading the base data
 """
 
 # standard library
 # import timeit
 # start = timeit.default_timer()
 import datetime as dt
+from collections import namedtuple
 
 # third party
 import pandas as pd
@@ -20,7 +22,7 @@ import pandas as pd
 # local
 # from query.query import connect, run_query
 # from query.definition import QueryDef
-from logic.config import PARAM, MAIN_PATH, DATA_PATH
+from logic.config import PARAM, DATA_PATH, MAILHIST_PATH
 
 
 ascii = """
@@ -76,8 +78,7 @@ today = dt.date.today()
 
 # load history
 try:
-    file = DATA_PATH / 'mail_historie.pkl'
-    MAIL_HISTORIE = pd.read_pickle(file)
+    MAIL_HISTORIE = pd.read_pickle(MAILHIST_PATH)
 
     # update tables or exclude today
     if not today in list(MAIL_HISTORIE.datum):
@@ -101,5 +102,73 @@ except FileNotFoundError:
 
 
 # SQL = get_sql('inschrijfhistorie')
-with open(MAIN_PATH / 'sql.txt', 'r') as f:
+with open(DATA_PATH / 'sql.txt', 'r') as f:
     SQL = f.read()
+
+
+# load tables
+frames = [
+    'inschrijfhistorie', # 's_sih'
+    'aanvangsjaar',      # 's_opl'
+    'stoplicht',         # 's_stop'
+    'adres',             # 's_adr_nl'
+    'ooa_aanmelding',    # 's_ooa_aan'
+    'finstorno',         # 's_fin_storno'
+    'fingroepen',        # 's_fin_grp'
+]
+DataSet = namedtuple('DataSet', [f for f in frames])
+
+# OSIRIS QUERY
+# dfs = DataSet(**{
+#     f:QueryResult.read_pickle(f"monitor/{f}_{PARAM.jaar}").frame
+#     for f in frames
+# })
+
+
+print(f"using file '{MAILHIST_PATH}'")
+
+
+def sanity_check(path):
+    if testfile.exists():
+        print(f">>> file '{path.name}' found")
+    else:
+        print(f">>> file '{path.name}' not found")
+        return False
+
+    if testfile.suffix == '.pkl':
+        df = pd.read_pickle(testfile)
+    else:
+        df = pd.read_excel(testfile)
+
+    last_record = df.mutatie_datum.max()
+    print(f">>> last record was updated on {last_record}")
+
+    if last_record < today:
+        print(f">>> files are stale (expecting: {today})")
+        return False
+
+    print(">>> sanity checked passed")
+    return True
+
+
+testfile = DATA_PATH / 'inschrijfhistorie.pkl'
+if sanity_check(testfile):
+    dfs = DataSet(**{
+        f:pd.read_pickle(DATA_PATH / f"{f}.pkl") for f in frames})
+else:
+    print(">>> osiris_query data not found, looking for access data")
+    testfile = DATA_PATH / 'inschrijfhistorie.xlsx'
+    while not sanity_check(testfile):
+        print("please update data using access...")
+        user = input("press enter to continue (enter . to exit): ")
+        if user == '.':
+            raise KeyboardInterrupt("cancelled by user")
+        if user == 'i':
+            break
+
+    if user == 'i':
+        dfs = DataSet(**{
+            f:pd.read_pickle(DATA_PATH / f"{f}.pkl") for f in frames})
+    else:
+        dfs = DataSet(**{
+            f:pd.read_excel(DATA_PATH / f"{f}.excel") for f in frames})

@@ -7,82 +7,28 @@ The selected features are used for selecting the mailing groups.
 """
 
 # standard library
-from collections import namedtuple
+from functools import wraps
 
 # third party
 import pandas as pd
 
 # local
 # from query.results import QueryResult
-from logic.config import PARAM, MAIN_PATH, DATA_PATH
-from logic.init import today
+from logic.config import PARAM, DATA_PATH
+from logic.startup import today, dfs
 
 
-# load tables
-frames = [
-    'inschrijfhistorie', # 's_sih'
-    'aanvangsjaar',      # 's_opl'
-    'stoplicht',         # 's_stop'
-    'adres',             # 's_adr_nl'
-    'ooa_aanmelding',    # 's_ooa_aan'
-    'finstorno',         # 's_fin_storno'
-    'fingroepen',        # 's_fin_grp'
-]
-DataSet = namedtuple('DataSet', [f for f in frames])
-
-# OSIRIS QUERY
-# dfs = DataSet(**{
-#     f:QueryResult.read_pickle(f"monitor/{f}_{PARAM.jaar}").frame
-#     for f in frames
-# })
+def shape(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        df, *_ = args
+        result = func(*args, **kwargs)
+        print(f"{func.__name__:.>16}", result.shape)
+        return result
+    return wrapper
 
 
-def sanity_check(path):
-    if testfile.exists():
-        print(f">>> file '{path.name}' found")
-    else:
-        print(f">>> file '{path.name}' not found")
-        return False
-
-    if testfile.suffix == '.pkl':
-        df = pd.read_pickle(testfile)
-    else:
-        df = pd.read_excel(testfile)
-
-    last_record = df.mutatie_datum.max()
-    print(f">>> last record was updated on {last_record}")
-
-    if last_record < today:
-        print(f">>> files are stale (expecting: {today})")
-        return False
-
-    print(">>> sanity checked passed")
-    return True
-
-
-testfile = DATA_PATH / 'inschrijfhistorie.pkl'
-if sanity_check(testfile):
-    dfs = DataSet(**{
-        f:pd.read_pickle(DATA_PATH / f"{f}.pkl") for f in frames})
-else:
-    print(">>> osiris_query data not found, looking for access data")
-    testfile = DATA_PATH / 'inschrijfhistorie.xlsx'
-    while not sanity_check(testfile):
-        print("please update data using access...")
-        user = input("press enter to continue (enter . to exit): ")
-        if user == '.':
-            raise KeyboardInterrupt("cancelled by user")
-        if user == 'i':
-            break
-
-    if user == 'i':
-        dfs = DataSet(**{
-            f:pd.read_pickle(DATA_PATH / f"{f}.pkl") for f in frames})
-    else:
-        dfs = DataSet(**{
-            f:pd.read_excel(DATA_PATH / f"{f}.excel") for f in frames})
-
-
+@shape
 def set_aanvangsjaar(df):
     """
     Add `aanvangsjaar` from `dfs.opl` as column to `df` and fill empty values with current year.
@@ -94,6 +40,7 @@ def set_aanvangsjaar(df):
     return df
 
 
+@shape
 def set_soort_vti(df):
     """
     Categorize enrollment requests and add categories to column `soort` in `df`.
@@ -117,6 +64,7 @@ def set_soort_vti(df):
     return df
 
 
+@shape
 def set_nl_adres(df):
     """
     Add `nl_adres` as column to `df` and fill value if `studentnummer` is present in `dfs.adr_nl`.
@@ -126,6 +74,7 @@ def set_nl_adres(df):
     return df
 
 
+@shape
 def set_stoplicht(df):
     """
     Create `df_stop_kleur` and `df_stop_toel` through pivot from `dfs.stop`.
@@ -188,6 +137,7 @@ def set_stoplicht(df):
     return df
 
 
+@shape
 def set_fin(df):
     """
     Add:
@@ -203,21 +153,21 @@ def set_fin(df):
     # fingroepen
     df['fingroep'] = df['studentnummer'].isin(
         dfs.fingroepen
-        .query("groep != @factuur and groep != @niet_sepa")
+        .query("groep not in @factuur and groep not in @niet_sepa")
         ['studentnummer']
         )
 
     # factuur
     df['factuur'] = df['studentnummer'].isin(
         dfs.fingroepen
-        .query("groep == @factuur")
+        .query("groep in @factuur")
         ['studentnummer']
         )
 
     # elders
     df['niet_sepa'] = df['studentnummer'].isin(
         dfs.fingroepen
-        .query("groep == @niet_sepa")
+        .query("groep in @niet_sepa")
         ['studentnummer']
         )
 
@@ -226,19 +176,12 @@ def set_fin(df):
     return df
 
 
+@shape
 def set_ooa(df):
     """
     Add information on online application processes to `df`.
     """
 
-    ooa = dfs.ooa_aanmelding
-
-    # aanmeldprocessen
-    ooa['statusbesluit'] = ooa['besluit'].astype(str)
-    ooa['statusbesluit'] = ooa['statusbesluit'].replace({'nan': pd.NA})
-    ooa['statusbesluit'] = ooa['statusbesluit'].fillna(ooa['status'])
-
-    ## ooa_aanmelding
     p = PARAM.ooa_aanm
     q = "proces in @p"
     cols = [
@@ -248,36 +191,66 @@ def set_ooa(df):
         'datum_status',
         'statusbesluit',
     ]
-    subset = ['studentnummer', 'proces', 'opleiding']
+    subset = ['studentnummer', 'opleiding']
     data = (ooa
-        .query(q)[cols].sort_values('datum_status', ascending=True)
+        .query(q)
+        [cols]
+        .sort_values('datum_status', ascending=True)
         .drop_duplicates(subset=subset, keep='last')
-        [['studentnummer', 'opleiding', 'statusbesluit']]
+        .drop(['proces', 'datum_status'], axis=1)
         .rename(columns={'statusbesluit': 'statusbesluit_ooa'})
     )
-    df = df.merge(data, how='left')
+    return df.merge(data, how='left')
 
-    ## ooa_diplomawaardering
+
+@shape
+def set_dipw(df):
     p = PARAM.ooa_dipw
     q = "proces in @p"
-    cols = ['studentnummer', 'opleiding', 'statusbesluit']
+    cols = [
+        'studentnummer',
+        'opleiding',
+        'proces',
+        'datum_status',
+        'statusbesluit',
+    ]
+    subset = ['studentnummer', 'opleiding']
     data = (ooa
-        .query(q)[cols]
+        .query(q)
+        [cols]
+        .sort_values('datum_status', ascending=True)
+        .drop_duplicates(subset=subset, keep='last')
+        .drop(['proces', 'datum_status'], axis=1)
         .rename(columns={'statusbesluit': 'statusbesluit_dipw'})
     )
-    df = df.merge(data, how='left')
+    return df.merge(data, how='left')
 
-    ## acceptatieformulier master
+
+@shape
+def set_accform(df):
     p = PARAM.acceptatieform
     q = "proces in @p"
-    cols = ['studentnummer', 'opleiding', 'status_aanbieding']
+    cols = [
+        'studentnummer',
+        'opleiding',
+        'proces',
+        'datum_status',
+        'status_aanbieding',
+    ]
+    subset = ['studentnummer', 'opleiding']
     data = (ooa
-        .query(q)[cols]
+        .query(q)
+        [cols]
+        .sort_values('datum_status', ascending=True)
+        .drop_duplicates(subset=subset, keep='last')
+        .drop(['proces', 'datum_status'], axis=1)
         .rename(columns={'status_aanbieding': 'acceptatieform'})
     )
-    df = df.merge(data, how='left')
+    return df.merge(data, how='left')
 
-    ## isa_vvr
+
+@shape
+def set_isa(df):
     p = PARAM.isa_vvr
     q = "proces in @p"
     data = ooa.query(q).studentnummer
@@ -285,12 +258,21 @@ def set_ooa(df):
     return df
 
 
+# prepare ooa
+ooa = dfs.ooa_aanmelding
+ooa['statusbesluit'] = ooa['besluit'].astype(str)
+ooa['statusbesluit'] = ooa['statusbesluit'].replace({'nan': pd.NA})
+ooa['statusbesluit'] = ooa['statusbesluit'].fillna(ooa['status'])
+
 # create DF
 DF = (dfs.inschrijfhistorie
     .pipe(set_aanvangsjaar)
     .pipe(set_soort_vti)
     .pipe(set_nl_adres)
     .pipe(set_ooa)
+    .pipe(set_dipw)
+    .pipe(set_accform)
+    .pipe(set_isa)
     .pipe(set_fin)
     .pipe(set_stoplicht)
 )

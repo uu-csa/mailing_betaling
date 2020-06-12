@@ -37,6 +37,7 @@ def create_stoplicht(df, id):
         .set_index(['studentnummer', 'opleiding'])
         .loc[id, [f"k_{tup[1]}" for tup in stoplichtkleuren]]
         .T
+        .astype(str)
         .fillna('')
         .set_index(pd.MultiIndex.from_tuples(stoplichtkleuren))
         .style

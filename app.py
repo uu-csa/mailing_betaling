@@ -12,9 +12,9 @@ import pandas as pd
 from flask import Flask, render_template, send_from_directory, request
 
 # local
-import logic.select as select
-from logic.config import MAIN_PATH, PARAM
-from logic.init import SQL
+from logic import select
+from logic.config import HERE_PATH, PARAM
+from logic.startup import SQL
 from logic.views import (
     create_stoplicht,
     create_studentkenmerken,
@@ -202,10 +202,10 @@ def download():
     df.query(
         "mail == @file"
     ).index.to_frame().to_excel(
-        MAIN_PATH / 'output' / f'{file}.xlsx',
+        HERE_PATH / 'output' / f'{file}.xlsx',
         index=False,
     )
-    path = MAIN_PATH / 'output'
+    path = HERE_PATH / 'output'
     return send_from_directory(
         path,
         f'{file}.xlsx',

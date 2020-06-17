@@ -67,7 +67,9 @@ for name, query in BUITEN_ZEEF.items():
 
 cols = [col for col in mail_vti_bz.columns if col.startswith('m_')]
 mail_stud_bz = (
-    mail_vti_bz.query(status, engine='python')
+    mail_vti_bz
+    .query(status, engine='python')
+    .fillna(False)
     .groupby('studentnummer')
     [cols].sum()
     .applymap(bool)

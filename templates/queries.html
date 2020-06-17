@@ -12,8 +12,8 @@
         {% else %}
         <div class="grid-item">
             {% for element in value %}
-            <ul class="monospace">
-                <li>{{ element }}</li>
+            <ul>
+                <li class="monospace">{{ element }}</li>
             </ul>
             {% endfor %}
         </div>
@@ -42,9 +42,7 @@
         </div>
         <div id="basis" class="tabcontent">
             <p>
-            {% for line in queries.basis %}
-                {{ line }} and<br/>
-            {% endfor %}
+            {{ queries.basis|join(' and<br/>')|safe }}
             </p>
         </div>
         <div id="betaling" class="tabcontent">

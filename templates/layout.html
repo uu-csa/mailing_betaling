@@ -88,10 +88,12 @@
                 </div>
                 {% endif %}
             </div>
-            <div class="bottom flex justify">
+            <div class="bottom flex justify center-items
+                column">
                 <a href="https://www.youtube.com/watch?v=q4Wu6Zw1fUc" class="icon">
                     <img src="{{ url_for('static', filename='noun_squid.svg') }}" width=48 alt="squid">
                 </a>
+                <code class="monospace">version {{ sidebar.version }}</code>
             </div>
         </div>
 

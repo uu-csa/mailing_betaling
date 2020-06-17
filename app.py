@@ -8,10 +8,12 @@ from math import ceil
 from collections import namedtuple
 
 # third party
+import click
 import pandas as pd
 from flask import Flask, render_template, send_from_directory, request
 
 # local
+import logic
 from logic import select
 from logic.config import HERE_PATH, PARAM
 from logic.startup import SQL
@@ -21,6 +23,17 @@ from logic.views import (
     create_inschrijfkenmerken,
     create_overview,
 )
+
+
+def secho(text, file=None, nl=None, err=None, color=None, **styles):
+    pass
+
+def echo(text, file=None, nl=None, err=None, color=None, **styles):
+    pass
+
+click.echo = echo
+click.secho = secho
+
 
 # parameters
 ## sidebar
@@ -34,6 +47,7 @@ items = dict(
     n_stud      = len(select.mail_stud),
     geen_mail   = select.geen_mail,
     meer_mail   = select.meer_mail,
+    version     = logic.__version__,
 )
 SB = namedtuple('sidebar', items.keys())
 sidebar = SB(**items)

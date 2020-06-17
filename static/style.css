@@ -88,6 +88,9 @@ table {
 .justify {
     justify-content: center;
 }
+.center-items {
+    align-items: center;
+}
 .align {
     align-self: center;
 }
@@ -286,4 +289,6 @@ table {
     }
     .tabcontent p {
         margin: 0;
+        font-size: 12px;
+        font-family: 'Courier New', Courier, monospace;
     }

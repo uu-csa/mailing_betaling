@@ -23,7 +23,7 @@ def shape(func):
     def wrapper(*args, **kwargs):
         df, *_ = args
         result = func(*args, **kwargs)
-        print(f"{func.__name__:.>16}", result.shape)
+        print(f"{func.__name__:.>48}", result.shape)
         return result
     return wrapper
 
@@ -265,6 +265,8 @@ ooa['statusbesluit'] = ooa['statusbesluit'].replace({'nan': pd.NA})
 ooa['statusbesluit'] = ooa['statusbesluit'].fillna(ooa['status'])
 
 # create DF
+print('_' * 75)
+print()
 DF = (dfs.inschrijfhistorie
     .pipe(set_aanvangsjaar)
     .pipe(set_soort_vti)
@@ -277,3 +279,4 @@ DF = (dfs.inschrijfhistorie
     .pipe(set_stoplicht)
 )
 DF.datum_vti = DF.datum_vti.dt.date
+print('_' * 75)

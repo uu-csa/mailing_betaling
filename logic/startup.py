@@ -37,6 +37,11 @@ ascii = """
 """
 print(ascii)
 
+print(
+"""HI! IT'S ME -- THE APPLICATION SERVING THE WEBPAGES.
+IF YOU SHUT ME DOWN, NO OTHER PAGES WILL BE SERVED!
+"""
+)
 
 #parameters
 parameters = {'collegejaar': str(PARAM.jaar)}
@@ -147,7 +152,7 @@ def sanity_check(path):
         print(f">>> files are stale (expecting: {today})")
         return False
 
-    print(">>> sanity checked passed")
+    print(">>> yay! sanity check passed")
     return True
 
 

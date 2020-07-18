@@ -22,6 +22,7 @@ import pandas as pd
 # local
 # from query.query import connect, run_query
 # from query.definition import QueryDef
+import logic
 from logic.config import PARAM, DATA_PATH, MAILHIST_PATH
 
 
@@ -36,6 +37,8 @@ ascii = """
 ==========================================================================
 """
 print(ascii)
+
+print(f"Running version: {logic.__version__}\n")
 
 print(
 """HI! IT'S ME -- THE APPLICATION SERVING THE WEBPAGES.
@@ -118,6 +121,7 @@ frames = [
     'stoplicht',         # 's_stop'
     'adres',             # 's_adr_nl'
     'ooa_aanmelding',    # 's_ooa_aan'
+    'ooa_rubriek',
     'finstorno',         # 's_fin_storno'
     'fingroepen',        # 's_fin_grp'
 ]

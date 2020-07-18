@@ -37,3 +37,4 @@
 - velden `vvr_van_csa_naar_isa` en `vvr_van_isa_naar_csa` toegevoegd bij **kenmerken**
 - veld `actiefcode` toegevoegd bij **inschrijfregel**
 - tabel toegevoegd waarin aangegeven staat in welke bakje(s) de student is terechtgekomen; dit is niet direct uit de mailhistorie af te leiden omdat daar alleen records worden toegevoegd indien de vorige gelijksoortige mail meer dan twee weken geleden verstuurd is
+- niet voorkomend studentnummer leidt niet langer tot een error message

@@ -150,6 +150,29 @@ def view_results():
 def view_debug():
     if request.method == 'POST':
         studentnummer = request.form['studentnummer']
+
+        if select.DF.studentnummer.isin([studentnummer]).any():
+            kenmerken = (
+                f"<div class='flex wide'>"
+                    f"<div class='flex column'>"
+                        f"<h3>Kenmerken</h3>"
+                        f"{create_studentkenmerken(select.DF, studentnummer)}"
+                    f"</div>"
+                    f"<div class='flex column'>"
+                        f"<h3>Inschrijfregel</h3>"
+                        f"{create_inschrijfkenmerken(select.DF, studentnummer)}"
+                    f"</div>"
+                    f"<div class='flex column'>"
+                        f"<h3>Stoplicht</h3>"
+                        f"{create_stoplicht(select.DF, studentnummer)}"
+                    f"</div>"
+                f"</div>"
+            )
+        else:
+            kenmerken = (
+                "<div class='flex wide'>studentnummer niet gevonden</div>"
+            )
+
         try:
             mailhist = (
                 select.MAIL_HISTORIE
@@ -187,20 +210,7 @@ def view_debug():
             )
         table += "</tbody></table>"
         result = (
-            f"<div class='flex wide'>"
-                f"<div class='flex column'>"
-                    f"<h3>Kenmerken</h3>"
-                    f"{create_studentkenmerken(select.DF, studentnummer)}"
-                f"</div>"
-                f"<div class='flex column'>"
-                    f"<h3>Inschrijfregel</h3>"
-                    f"{create_inschrijfkenmerken(select.DF, studentnummer)}"
-                f"</div>"
-                f"<div class='flex column'>"
-                    f"<h3>Stoplicht</h3>"
-                    f"{create_stoplicht(select.DF, studentnummer)}"
-                f"</div>"
-            f"</div>"
+            f"{kenmerken}"
             f"<hr>"
             f"<div class='flex wide'>"
                 f"<div class='flex column'>"

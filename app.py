@@ -9,6 +9,7 @@ from collections import namedtuple
 
 # third party
 import click
+import markdown
 import pandas as pd
 from flask import Flask, render_template, send_from_directory, request
 
@@ -65,7 +66,7 @@ Q = namedtuple('queries', items.keys())
 queries = Q(**items)
 
 
-##tables
+## tables
 df = select.view_mail_stud.drop('Totaal')
 df.index = [f'm_{idx}' for idx in df.index]
 mails = df['aantal'].to_dict()
@@ -75,6 +76,11 @@ table_vti = select.view_mail_vti.to_html(border=0)
 table_stud = select.view_mail_stud.to_html(border=0)
 
 table_totals = create_overview(select.MAIL_HISTORIE, mails)
+
+
+## changelog
+with open('static/changelog.md', 'r', encoding='utf8') as f:
+    changelog_md = markdown.markdown(f.read())
 
 
 # copypasta
@@ -207,6 +213,17 @@ def view_debug():
         title=title,
         heading='debug',
         sidebar=sidebar,
+    )
+
+
+@app.route("/changelog")
+def changelog():
+    return render_template(
+        'changelog.html',
+        title=title,
+        heading='changelog',
+        sidebar=sidebar,
+        changelog=changelog_md,
     )
 
 

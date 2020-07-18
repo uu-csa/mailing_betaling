@@ -107,6 +107,9 @@ table {
     justify-content: center;
     border-bottom: 1px solid var(--color-main);
 }
+code {
+    font-family: 'Courier New', Courier, monospace;
+}
 .monospace {
     font-family: 'Courier New', Courier, monospace;
     font-size: 11px;
@@ -116,7 +119,10 @@ table {
 .string {
     display: none;
 }
-
+blockquote {
+    border-left: 2px solid gray;
+    padding: 3px;
+}
 
 /* SEGMENTS */
 .container {

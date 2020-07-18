@@ -13,7 +13,7 @@
     <div class="links">
         <a href="javascript:shutDown()" class="shutdown monospace">[x]</a>
         <div class="nav">
-        {% for tab in ['mailings', 'debug', 'queries', 'results'] %}
+        {% for tab in ['mailings', 'debug', 'queries', 'results', 'changelog'] %}
             {% if tab == heading %}
             <a href="/{{ tab }}" class="monospace selected">{{ tab }}</a>
             {% else %}
@@ -93,7 +93,7 @@
                 <a href="https://www.youtube.com/watch?v=q4Wu6Zw1fUc" class="icon">
                     <img src="{{ url_for('static', filename='noun_squid.svg') }}" width=48 alt="squid">
                 </a>
-                <code class="monospace">version {{ sidebar.version }}</code>
+                <a href="/changelog" class="monospace">version {{ sidebar.version }}</a>
             </div>
         </div>
 

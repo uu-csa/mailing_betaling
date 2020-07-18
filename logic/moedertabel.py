@@ -284,11 +284,28 @@ def set_vvr_csa_to_isa(df):
     )
 
 
+@shape
+def set_ffill_betaalvorm(df):
+    """
+    Copy betaalvorm to all
+
+    1. if inschrijvingstatus == 'G', remove betaalvorm
+    2. sort betaalvorm so non-empty values come first
+    3. forward will these values per student
+    """
+
+    df.loc[df.inschrijvingstatus == 'G', 'betaalvorm'] == pd.NA
+    df = df.sort_values('betaalvorm', ascending=False)
+    df.betaalvorm = df.groupby('studentnummer').betaalvorm.ffill()
+    return df
+
+
 # prepare ooa
 ooa = dfs.ooa_aanmelding
 ooa['statusbesluit'] = ooa['besluit'].astype(str)
 ooa['statusbesluit'] = ooa['statusbesluit'].replace({'nan': pd.NA})
 ooa['statusbesluit'] = ooa['statusbesluit'].fillna(ooa['status'])
+
 
 # create DF
 print('_' * 75)
@@ -305,6 +322,7 @@ DF = (dfs.inschrijfhistorie
     .pipe(set_vvr_csa_to_isa)
     .pipe(set_fin)
     .pipe(set_stoplicht)
+    .pipe(set_ffill_betaalvorm)
 )
 DF.datum_vti = DF.datum_vti.dt.date
 print('_' * 75)

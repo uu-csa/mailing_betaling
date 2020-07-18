@@ -1,7 +1,8 @@
 @echo off
 @echo.
 @echo  * activate virtual environment 'osiris-query'
-call activate osiris-query
+REM call activate osiris-query
+call venv\Scripts\activate.bat
 @echo  * run app
 @echo.
 @echo --------------------------------------------------------------------------

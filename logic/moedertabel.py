@@ -250,12 +250,38 @@ def set_accform(df):
 
 
 @shape
-def set_isa(df):
+def set_vvr_isa(df):
     p = PARAM.isa_vvr
     q = "proces in @p"
     data = ooa.query(q).studentnummer
     df['isa_vvr_proces'] = df.studentnummer.isin(data)
     return df
+
+
+@shape
+def set_vvr_isa_to_csa(df):
+    query = "proces == 'MVV/VVR BMS20' and rubriekstatus == 'F21'"
+    studentnummers = (
+        dfs.ooa_aanmelding.merge(
+            dfs.ooa_rubriek.query(query)
+        )
+    ).studentnummer
+    return df.assign(
+        vvr_van_isa_naar_csa = df.studentnummer.isin(studentnummers)
+    )
+
+
+@shape
+def set_vvr_csa_to_isa(df):
+    query = "proces == 'CSA_I_VVR' and rubriekstatus == 'X'"
+    studentnummers = (
+        dfs.ooa_aanmelding.merge(
+            dfs.ooa_rubriek.query(query)
+        )
+    ).studentnummer
+    return df.assign(
+        vvr_van_csa_naar_isa = df.studentnummer.isin(studentnummers)
+    )
 
 
 # prepare ooa
@@ -274,7 +300,9 @@ DF = (dfs.inschrijfhistorie
     .pipe(set_ooa)
     .pipe(set_dipw)
     .pipe(set_accform)
-    .pipe(set_isa)
+    .pipe(set_vvr_isa)
+    .pipe(set_vvr_isa_to_csa)
+    .pipe(set_vvr_csa_to_isa)
     .pipe(set_fin)
     .pipe(set_stoplicht)
 )

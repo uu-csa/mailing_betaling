@@ -159,6 +159,18 @@ def view_debug():
         except KeyError:
             mailhist = "<i>geen</i>"
 
+        try:
+            mailings = (
+                select.mail_vti
+                .set_index('studentnummer')[select.cols_mailing]
+                .loc[[studentnummer]]
+                .T
+                .fillna(False)
+                .to_html(border=0)
+            )
+        except KeyError:
+            mailings = "<i>geen</i>"
+
         datasets = {
             'bron':    select.DF.studentnummer.array,
             'basis':   select.basis.studentnummer.array,
@@ -192,12 +204,16 @@ def view_debug():
             f"<hr>"
             f"<div class='flex wide'>"
                 f"<div class='flex column'>"
-                    f"<h3>Mailhistorie</h3>"
-                    f"{mailhist}"
-                f"</div>"
-                f"<div class='flex column'>"
                     f"<h3>Zeef</h3>"
                     f"{table}"
+                f"</div>"
+                f"<div class='flex column'>"
+                    f"<h3>Mailings</h3>"
+                    f"{mailings}"
+                f"</div>"
+                f"<div class='flex column'>"
+                    f"<h3>Mailhistorie</h3>"
+                    f"{mailhist}"
                 f"</div>"
             f"</div>"
         )

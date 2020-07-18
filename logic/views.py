@@ -47,11 +47,13 @@ def create_stoplicht(df, id):
 
 studentkenmerken = [
     'nl_adres',
-    'isa_vvr_proces',
     'fingroep',
     'factuur',
     'niet_sepa',
     'betalingsachterstand',
+    'isa_vvr_proces',
+    'vvr_van_isa_naar_csa',
+    'vvr_van_csa_naar_isa',
 ]
 
 
@@ -70,13 +72,13 @@ inschrijving = [
     'soort',
     'datum_vti',
     'inschrijvingstatus',
+    'actiefcode',
     'betaalvorm',
     'flex_deelname',
     'flex_aantal_ec',
     'statusbesluit_ooa',
     'statusbesluit_dipw',
     'acceptatieform',
-    'isa_vvr_proces',
 ]
 
 

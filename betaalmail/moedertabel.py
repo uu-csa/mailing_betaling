@@ -14,8 +14,8 @@ import pandas as pd
 
 # local
 # from query.results import QueryResult
-from logic.config import PARAM, DATA_PATH
-from logic.startup import today, dfs
+from betaalmail.config import PARAM, DATA_PATH
+from betaalmail.startup import today, dfs
 
 
 def shape(func):

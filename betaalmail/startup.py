@@ -22,8 +22,8 @@ import pandas as pd
 # local
 # from query.query import connect, run_query
 # from query.definition import QueryDef
-import logic
-from logic.config import PARAM, DATA_PATH, MAILHIST_PATH
+import betaalmail
+from betaalmail.config import PARAM, DATA_PATH, MAILHIST_PATH
 
 
 ascii = """
@@ -38,7 +38,7 @@ ascii = """
 """
 print(ascii)
 
-print(f"Running version: {logic.__version__}\n")
+print(f"Running version: {betaalmail.__version__}\n")
 
 print(
 """HI! IT'S ME -- THE APPLICATION SERVING THE WEBPAGES.

@@ -8,7 +8,7 @@ This module queries DF with the BASIS, STATUS and MAILS queries respectively.
 import pandas as pd
 
 # local
-from logic.config import (
+from betaalmail.config import (
     DATA_PATH,
     MAILHIST_PATH,
     PARAM,
@@ -18,8 +18,8 @@ from logic.config import (
     MAILS,
     BUITEN_ZEEF,
 )
-from logic.startup import today, MAIL_HISTORIE, MAIL_VORIGE
-from logic.moedertabel import DF
+from betaalmail.startup import today, MAIL_HISTORIE, MAIL_VORIGE
+from betaalmail.moedertabel import DF
 
 
 # parameters

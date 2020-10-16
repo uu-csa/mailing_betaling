@@ -15,9 +15,9 @@
         <div class="nav">
         {% for tab in ['mailings', 'debug', 'queries', 'results', 'changelog'] %}
             {% if tab == heading %}
-            <a href="/{{ tab }}" class="monospace selected">{{ tab }}</a>
+            <a href="{{ url_for('betaalmail.' + tab) }}" class="monospace selected">{{ tab }}</a>
             {% else %}
-            <a href="/{{ tab }}" class="monospace">{{ tab }}</a>
+            <a href="{{ url_for('betaalmail.' + tab) }}" class="monospace">{{ tab }}</a>
             {% endif %}
         {% endfor %}
         </div>

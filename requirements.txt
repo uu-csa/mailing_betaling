@@ -1,10 +1,10 @@
-Flask==1.1.1
-itsdangerous==1.1.0
-Jinja2==2.11.1
-MarkupSafe==1.1.1
-six==1.14.0
-Werkzeug==1.0.0
-pandas==1.0.3
+Flask
+itsdangerous
+Jinja2
+MarkupSafe
+six
+Werkzeug
+pandas
 markdown
 xlrd
 openpyxl

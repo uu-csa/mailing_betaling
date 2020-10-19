@@ -6,5 +6,5 @@ call venv\Scripts\activate.bat
 @echo  * run app
 @echo.
 @echo --------------------------------------------------------------------------
-call python.exe app_.py
+call python.exe app_test.py
 pause

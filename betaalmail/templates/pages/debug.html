@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="flex wide column">
+    <form method="POST">
+        <label for="#studentnummer">Studentnummer</label>
+        <input id="studentnummer" name="studentnummer" type="text">
+        <input type="submit" value="submit"/>
+    </form>
+    <hr>
+    <div class="flex wide column">
+    {% if studentnummer %}
+
+        {% if bron.studentnummer.isin([studentnummer]).any() %}
+        <div class='flex wide'>
+            <div class='flex column'>
+                <h3>Kenmerken</h3>
+                {{ create_studentkenmerken(bron, studentnummer)|safe }}
+            </div>
+            <div class='flex column'>
+                <h3>Inschrijfregel</h3>
+                {{ create_inschrijfkenmerken(bron, studentnummer)|safe }}
+            </div>
+            <div class='flex column'>
+                <h3>Stoplicht</h3>
+                {{ create_stoplicht(bron, studentnummer)|safe }}
+            </div>
+        </div>
+        {% else %}
+        <div class='flex wide'>studentnummer niet gevonden</div>
+        {% endif %}
+        <hr>
+        <div class='flex wide'>
+            <div class='flex column'>
+                <h3>Zeef</h3>
+                <table>
+                    <thead>
+                        <th></th>
+                        <th>aanwezig</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>bron</th>
+                            <td>{{ bron.studentnummer.isin([studentnummer]).any() }}</td>
+                        </tr>
+                        <tr>
+                            <th>basis</th>
+                            <td>{{ basis.studentnummer.isin([studentnummer]).any() }}</td>
+                        <tr>
+                        </tr>
+                            <th>inschrijfregel</th>
+                            <td>{{ mailings_per_vti.studentnummer.isin([studentnummer]).any() }}</td>
+                        </tr>
+                        <tr>
+                            <th>mailinglijst</th>
+                            <td>{{ studentnummer in mailinglijst.index }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class='flex column'>
+                <h3>Mailings</h3>
+                {% if mailings_per_vti.studentnummer.isin([studentnummer]).any() %}
+                {{ create_mailings(mailings_per_vti, studentnummer)|safe }}
+                {% else %}
+                <i>geen</i>
+                {% endif %}
+            </div>
+            <div class='flex column'>
+                <h3>Mailhistorie</h3>
+                {% if mailhistorie.index.isin([studentnummer]).any() %}
+                {{ create_mailhistorie(mailhistorie, studentnummer)|safe }}
+                {% else %}
+                <i>geen</i>
+                {% endif %}
+            </div>
+        </div>
+
+    {% endif %}
+    </div>
+</div>
+{% endblock %}

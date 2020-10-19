@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'base.html' %}
 {% block body %}
 
 <div class="flex column">
@@ -36,38 +36,38 @@
 
         <div id="bron" class="tabcontent">
             <p><b>sql</b></p>
-            {% for line in queries.bron %}
+            {% for line in query_bron %}
                 {{ line|replace('    ', '&emsp;')|safe }}<br/>
             {% endfor %}
         </div>
         <div id="basis" class="tabcontent">
             <p>
-            {{ queries.basis|join(' and<br/>')|safe }}
+            {{ query_basis|join(' and<br/>')|safe }}
             </p>
         </div>
         <div id="betaling" class="tabcontent">
-            {% for key, value in queries.betaling.items() %}
+            {% for key, value in query_betaling.items() %}
             <p><b>{{ key }}</b></p>
             <p>{{ value|replace(' and', ' and<br/>')|safe }}</p>
             </br>
             {% endfor %}
         </div>
         <div id="verzoek" class="tabcontent">
-            {% for key, value in queries.verzoek.items() %}
+            {% for key, value in query_verzoek.items() %}
             <p><b>{{ key }}</b></p>
             <p>{{ value|replace(' and', ' and<br/>')|safe }}</p>
             </br>
             {% endfor %}
         </div>
         <div id="mailing" class="tabcontent">
-            {% for key, value in queries.mailing.items() %}
+            {% for key, value in query_mailing.items() %}
             <p><b>{{ key }}</b></p>
             <p>{{ value|replace(' and', ' and<br/>')|safe }}</p>
             </br>
             {% endfor %}
         </div>
         <div id="buitenzeef" class="tabcontent">
-            {% for key, value in queries.buitenzeef.items() %}
+            {% for key, value in query_buitenzeef.items() %}
             <p><b>{{ key }}</b></p>
             <p>{{ value|replace(' and', ' and<br/>')|safe }}</p>
             </br>

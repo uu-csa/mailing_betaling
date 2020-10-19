@@ -1,21 +1,21 @@
-{% extends 'layout.html' %}
+{% extends 'base.html' %}
 {% block body %}
 
 <div class="flex column wide">
-    <h3>Resultaten op {{ sidebar.date }}</h3>
+    <h3>Resultaten op {{ datum }}</h3>
     <div class="flex">
         <div class="flex column">
             <h4>Studenten</h4>
-            {{ table_stud|safe }}
+            {{ totalen_per_mailing.to_frame().to_html(border=0)|safe }}
         </div>
         <div class="flex column">
             <h4>Inschrijfregels</h4>
-            {{ table_vti|safe }}
+            {{ totalen_per_soort_vti.to_html(border=0)|safe }}
         </div>
     </div>
     <hr>
     <h3>Totalen per week</h3>
-    {{ table_totals|safe }}
+    {{ maandoverzicht.to_html(border=0)|safe }}
 </div>
 
 {% endblock %}

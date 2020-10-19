@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<div class="flex wide wrap">
+    {% for mail, aantal in totalen_per_mailing.iloc[:-1].items() %}
+    <div class="mailing">
+        <h4>{{ mail }}</h4>
+        <div class="quantity">{{ aantal }}</div>
+        {% if aantal > 0 %}
+        <a href="/download?f={{ mail }}">
+            <button id="{{ mail }}" class="button">Excel</button>
+        </a>
+        <hr>
+        {% for batch, values in copypasta[mail].items() %}
+        <div>
+            <button id="{{ mail }}{{ batch }}" class="button" onclick="copyStringToClipboard('{{ values }}', '{{ mail }}{{ batch }}')">Copy batch {{ batch + 1 }}</button>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>Geen resultaten</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

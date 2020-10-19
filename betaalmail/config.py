@@ -31,6 +31,7 @@ These are formatted to be used in the `query` method of a `DataFrame`.
 """
 
 import configparser
+import json
 from pathlib import Path
 from collections import namedtuple
 
@@ -39,51 +40,33 @@ HERE_PATH = Path(__file__).resolve().parent.parent
 
 
 def load_ini(filename):
-    # load parameters
-    ini_file = filename
-    ini = configparser.ConfigParser()
-    ini.read(ini_file, encoding='utf-8')
-    return ini
+    config = configparser.ConfigParser()
+    config.read(filename, encoding='utf-8')
+    return config
 
 
 def get_string(item):
-    return item.strip('\n').replace('\n', ' ')
+    return item.strip('"\n').replace('\n', ' ')
 
-
-def to_list(item):
-    return item.strip('\n').split('\n')
+def get_path(item):
+    return Path(get_string(item))
 
 
 # CONFIG
 cfg = load_ini(HERE_PATH / 'config.ini')
-pathstring_data = cfg['config']['data']
-if pathstring_data.startswith('.'):
-    DATA_PATH = HERE_PATH / pathstring_data
-else:
-    DATA_PATH = Path(pathstring_data)
-
-if not DATA_PATH.exists():
-    raise FileNotFoundError(
-        "\n\nCannot access the data folder!\n\n"
-        "Please check the following:\n"
-        f"-> Is the data path '{pathstring_data}' correct?\n"
-        "... If not change your settings in `config.ini`...\n"
-        "-> Are you connected to the vpn?"
-    )
-
-MAILHIST_PATH = DATA_PATH / cfg['config']['mailhistorie']
+PATH_MOEDERTABEL = get_path(cfg['config']['moedertabel'])
+PATH_MAILHISTORIE = get_path(cfg['config']['mailhistorie'])
+PATH_PARAMETERS = get_path(cfg['config']['parameters'])
+PATH_QUERIES = get_path(cfg['config']['queries'])
 
 
 # PARAMETERS
-par = load_ini(DATA_PATH / 'parameters.ini')
-parameters = {k:to_list(v) for sect in par.values() for k,v in sect.items()}
-Parameters = namedtuple('Parameters', parameters.keys())
-PARAM = Parameters(**parameters)
-PARAM = PARAM._replace(jaar=int(PARAM.jaar[0]))
+with open(PATH_PARAMETERS, 'r', encoding='utf8') as f:
+    PARAMETERS = json.load(f)
 
 
 # QUERIES
-qry = load_ini(DATA_PATH / 'queries.ini')
+qry = load_ini(PATH_QUERIES)
 BASIS       = get_string(qry['basis']['basis'])
 BETALING    = {k:get_string(v) for k,v in qry['betaling'].items()}
 STATUS      = {k:get_string(v) for k,v in qry['status'].items()}

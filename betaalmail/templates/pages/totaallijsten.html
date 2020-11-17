@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<div class="flex column">
+    <h4>Ingangsmaand</h4>
+    {% for maand_naam, maand_nr in maanden.items() %}
+    {% set totaal = get_alle_kandidaten(maand_nr).iloc[-1] %}
+    <a href="{{ url_for('betaalmail.download') }}?maand={{ maand_nr }}" class="button"><b>{{ maand_naam }}</b> <span class="quantity">{{ totaal }}</span></a>
+    {% endfor %}
+</div>
+{% endblock body %}

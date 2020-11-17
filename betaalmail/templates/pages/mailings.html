@@ -1,26 +1,66 @@
 {% extends 'base.html' %}
 {% block body %}
 
-<div class="flex wide wrap">
-    {% for mail, aantal in totalen_per_mailing.iloc[:-1].items() %}
+<div class="flex column">
+    <h4>Ingangsmaand</h4>
+    {% for maand_naam, maand_nr in maanden.items() %}
+    {% set totaal = get_totalen_per_maand(maand_nr).iloc[-1] %}
+    {% set query = "maand=={} and datum=='{}'".format(maand_nr, datum) %}
+    {% set in_hist = not(mailhistorie.query(query).empty) %}
+    <div class="flex">
+        <a href="{{ url_for('betaalmail.mailings') }}?maand={{ maand_nr }}" class="button {% if maand_nr==maand %}selected{% endif %}"><b>{{ maand_naam }}</b> <span class="quantity">{{ totaal }}</span></a>
+    <input type="checkbox" name="{{ maand_naam }}" id="{{ maand_naam }}" onclick="UpdateMailHistory(this)" {% if totaal==0 %}disabled{% endif %} {% if in_hist %}checked{% endif %}>
+    </div>
+    {% endfor %}
+    <div class="monospace" id="flash"></div>
+</div>
+<div class="grid-auto wide wrap">
+{% for mail, aantal in get_totalen_per_maand(maand).iloc[:-1].items() %}
     <div class="mailing">
         <h4>{{ mail }}</h4>
         <div class="quantity">{{ aantal }}</div>
-        {% if aantal > 0 %}
-        <a href="/download?f={{ mail }}">
+    {% if aantal > 0 %}
+        <a href="{{ url_for('betaalmail.download') }}?maand={{ maand }}&mailing={{ mail }}">
             <button id="{{ mail }}" class="button">Excel</button>
         </a>
         <hr>
-        {% for batch, values in copypasta[mail].items() %}
+        {% for batch, values in copypasta[maand][mail].items() %}
         <div>
             <button id="{{ mail }}{{ batch }}" class="button" onclick="copyStringToClipboard('{{ values }}', '{{ mail }}{{ batch }}')">Copy batch {{ batch + 1 }}</button>
         </div>
         {% endfor %}
-        {% else %}
+    {% else %}
         <p>Geen resultaten</p>
-        {% endif %}
+    {% endif %}
     </div>
-    {% endfor %}
+{% endfor %}
 </div>
+{% endblock body %}
 
-{% endblock %}
+{% block script %}
+<script>
+const flash = document.getElementById('flash');
+
+function displayFlash (text) {
+    flash.innerText = text;
+    setTimeout(() => flash.innerText = '', 2000);
+};
+
+function UpdateMailHistory (origin) {
+    flash.innerText = "please wait...";
+    fetch("./mailings", {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify([origin.name, origin.checked]),
+        cache: "no-cache",
+        headers: new Headers({"content-type": "application/json"})
+    }).then(response => {
+        if (response.ok) {
+            displayFlash('updated...')
+        };
+    }).catch(function(err) {
+        console.info(err);
+    });
+};
+</script>
+{% endblock script %}

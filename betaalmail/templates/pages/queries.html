@@ -7,7 +7,8 @@
     <div class="grid">
     {% for item, value in params.items() %}
         <h4 class="grid-item">{{ item }}</h4>
-        {% if value is string or value is integer %}
+        {% if value is none %}
+        {% elif value is string or value is integer %}
         <p class="monospace grid-item"">{{ value }}</p>
         {% else %}
         <div class="grid-item">

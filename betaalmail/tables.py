@@ -1,4 +1,5 @@
 import pandas as pd
+from betaalmail.config import MAILS, BUITEN_ZEEF
 
 
 stoplichtkleuren = [
@@ -35,7 +36,7 @@ def create_stoplicht(df, studentnummer):
     return (
         df.set_index(['studentnummer', 'opleiding'])
         .loc[studentnummer, [f"k_{tup[1]}" for tup in stoplichtkleuren]]
-        .T.astype(str).fillna('')
+        .T.astype(object).fillna('')
         .set_index(pd.MultiIndex.from_tuples(stoplichtkleuren))
         .style.applymap(show_color)
     ).render()
@@ -58,11 +59,11 @@ def create_studentkenmerken(df, studentnummer):
         df.drop_duplicates(subset='studentnummer')
         .set_index('studentnummer')
         .loc[[studentnummer], studentkenmerken].T
-        # .fillna(False).T
     ).to_html(border=0)
 
 
 inschrijving = [
+    'ingangsdatum',
     'soort',
     'datum_vti',
     'inschrijvingstatus',
@@ -93,7 +94,7 @@ def create_mailhistorie(df, studentnummer):
 
 def create_mailings(df, studentnummer):
     return (
-        df.set_index('studentnummer')[cols_mailing]
+        df.set_index('studentnummer')[[*MAILS, *BUITEN_ZEEF]]
         .loc[[studentnummer]]
         .T.fillna(False)
         .to_html(border=0)

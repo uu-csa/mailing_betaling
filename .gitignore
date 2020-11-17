@@ -2,10 +2,10 @@ __pycache__/
 .vscode/
 .ipynb_checkpoints/
 output/*
-data/*
 venv/*
 dist/
 build/
+instance/
 *.egg-info/
 
 !output/.gitkeep

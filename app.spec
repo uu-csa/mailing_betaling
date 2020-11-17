@@ -3,9 +3,11 @@
 block_cipher = None
 
 added_files =[
-    ('templates/*.*', 'templates'),
-    ('static/*.*', 'static'),
-    ('output/*.*', 'output'),
+    ('betaalmail/templates/*.*', 'betaalmail/templates'),
+    ('betaalmail/templates/pages/*.*', 'betaalmail/templates/pages'),
+    ('betaalmail/content/*.*', 'betaalmail/content'),
+    ('static/betaalmail/*.*', 'static/betaalmail'),
+    ('instance/output/*.*', 'instance/output'),
     ('config.ini', '.'),
     ('venv/Lib/site-packages/pandas/io/formats/templates/html.tpl', '.'),
 ]
@@ -40,7 +42,7 @@ exe = EXE(
     strip=False,
     upx=True,
     console=True,
-    icon='static\\favicon.ico'
+    icon='static\\betaalmail\\favicon.ico'
 )
 coll = COLLECT(
     exe,

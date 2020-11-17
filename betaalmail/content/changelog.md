@@ -1,6 +1,24 @@
+## v1.2
+*(2020-10-27)*
+
+### Applicatie
+- betaalmail kan nu gebruikt worden voor het gehele collegejaar
+
+### Mailhistorie
+- mailhistorie wordt nu opgeslagen als `csv` bestand
+- mailhistorie wordt bijgehouden per ingangsmaand
+- mailings moeten worden afgevinkt:
+    - alleen als een maand is afgevinkt, worden de mailings toegevoegd aan de mailhistorie
+    - wanneer je een maand uitvinkt, worden de betreffende mailings uit de mailhistorie verwijderd
+
 ## v1.1
 *(2020-10-18)*
 
+### Applicatie
+- code volledig herschreven:
+    - moedertabel verwijderd uit de applicatie (staat nu op zichzelf)
+    - de betaalmail is nu opgebouwd als `blueprint`
+    - de code voor de zeef is vereenvoudigd en beter leesbaar gemaakt
 
 ## v1.04
 *(2020-07-17)*

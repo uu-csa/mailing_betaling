@@ -1,3 +1,5 @@
+{% set mailhistorie, _ = get_mailhistorie() %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +15,7 @@
     <div class="links">
         <a href="javascript:shutDown()" class="shutdown monospace">[x]</a>
         <div class="nav">
-        {% for tab in ['mailings', 'debug', 'queries', 'results', 'changelog'] %}
+        {% for tab in ['mailings', 'totaallijsten', 'debugger', 'queries', 'overzichten', 'changelog'] %}
             {% if tab == heading %}
             <a href="{{ url_for('betaalmail.' + tab) }}" class="monospace selected">{{ tab }}</a>
             {% else %}
@@ -66,8 +68,8 @@
                 {% if geen_mail %}
                 <p class="indent">Geen mededeling gekoppeld:</p>
                 <div class="indent">
-                    {% for studentnummer in geen_mail %}
-                    <form method="post" action="debug">
+                    {% for maand, studentnummer in geen_mail %}
+                    <form method="post" action="debugger">
                         <button type="submit" name="studentnummer" value="{{ studentnummer }}" class="button button-small">
                         {{ studentnummer }}
                         </button>
@@ -78,8 +80,8 @@
                 {% if meer_mail %}
                 <p>Meerdere mededelingen gekoppeld:</p>
                 <div class="indent">
-                {% for studentnummer in meer_mail %}
-                    <form method="post" action="debug">
+                {% for maand, studentnummer in meer_mail %}
+                    <form method="post" action="debugger">
                         <button type="submit" name="studentnummer" value="{{ studentnummer }}" class="button button-small">
                         {{ studentnummer }}
                         </button>
@@ -88,8 +90,7 @@
                 </div>
                 {% endif %}
             </div>
-            <div class="bottom flex justify center-items
-                column">
+            <div class="bottom flex justify center-items column">
                 <a href="https://www.youtube.com/watch?v=q4Wu6Zw1fUc" class="icon">
                     <img src="{{ url_for('static', filename='betaalmail/noun_squid.svg') }}" width=48 alt="squid">
                 </a>
@@ -102,4 +103,5 @@
         </div>
     </div>
 </body>
+{% block script %}{% endblock %}
 </html>

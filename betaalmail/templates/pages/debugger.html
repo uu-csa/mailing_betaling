@@ -67,7 +67,8 @@
             </div>
             <div class='flex column'>
                 <h3>Mailhistorie</h3>
-                {% if mailhistorie.index.isin([studentnummer]).any() %}
+                {% set mailhistorie, _ = get_mailhistorie() %}
+                {% if studentnummer in mailhistorie.index.levels[1] %}
                 {{ create_mailhistorie(mailhistorie, studentnummer)|safe }}
                 {% else %}
                 <i>geen</i>

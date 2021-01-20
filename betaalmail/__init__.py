@@ -134,6 +134,7 @@ def mailings():
             maanden[month],
             is_gemaild,
         )
+        mail.mailhistorie, _ = mail.get_mailhistorie(config.PATH_MAILHISTORIE)
         return redirect(url_for('betaalmail.mailings'))
     return render_template(
         'pages/mailings.html',
@@ -197,7 +198,6 @@ def download():
 
     if mailing is not None:
         file = f"{mailing}.xlsx"
-        print(file)
         mail.mailinglijst.xs(int(maand)).query(
             "mail == @mailing"
         ).index.to_frame().to_excel(path / file, index=False)

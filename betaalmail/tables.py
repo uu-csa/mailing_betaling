@@ -81,13 +81,14 @@ def create_inschrijfkenmerken(df, studentnummer):
     return (
         df.set_index(['studentnummer', 'opleiding'])
         .loc[studentnummer, inschrijving]
+        .assign(ingangsdatum = lambda df: df.ingangsdatum.dt.date)
         .T.fillna('')
     ).to_html(border=0)
 
 
 def create_mailhistorie(df, studentnummer):
     return (
-        df.loc[[studentnummer]]
+        df.xs(studentnummer, level=1)
         .to_html(border=0, index=False)
     )
 

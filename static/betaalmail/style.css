@@ -130,7 +130,7 @@ blockquote {
 
 /* SEGMENTS */
 .container {
-    width: 100vw;
+    width: 100%;
     flex: 1;
 }
 .area {

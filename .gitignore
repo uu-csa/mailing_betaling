@@ -7,6 +7,7 @@ dist/
 build/
 instance/
 *.egg-info/
+config.ini
 
 !output/.gitkeep
 *.code-workspace

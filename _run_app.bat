@@ -6,4 +6,4 @@ call venv\Scripts\activate.bat
 @echo.
 @echo --------------------------------------------------------------------------
 call python.exe app.py
-pause
+timeout /t 30

@@ -1,2 +1,2 @@
 call dist\app\betaalmail.exe
-pause
+timeout /t 30

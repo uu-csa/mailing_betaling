@@ -12,7 +12,7 @@
     <script src="{{ url_for('static', filename='betaalmail/script.js') }}"></script>
 </head>
 <body>
-    <div class="links">
+    <nav class="links">
         <a href="javascript:shutDown()" class="shutdown monospace">[x]</a>
         <div class="nav">
         {% for tab in ['mailings', 'totaallijsten', 'debugger', 'queries', 'overzichten', 'changelog'] %}
@@ -23,9 +23,9 @@
             {% endif %}
         {% endfor %}
         </div>
-    </div>
+    </nav>
     <div class="container flex">
-        <div class="flex column area top-left-straight sidebar">
+        <aside class="flex column area top-left-straight sidebar">
             <h1 class="brand">b€tAAlm@il</h1>
             <div class="flex column long pad">
                 <h2>{{ heading }}</h2>
@@ -96,11 +96,11 @@
                 </a>
                 <a href="/changelog" class="monospace">version {{ version }}</a>
             </div>
-        </div>
+        </aside>
 
-        <div class="flex wide area top-right-straight pad">
+        <main class="flex wide area top-right-straight pad">
         {% block body %}{% endblock %}
-        </div>
+        </main>
     </div>
 </body>
 {% block script %}{% endblock %}
